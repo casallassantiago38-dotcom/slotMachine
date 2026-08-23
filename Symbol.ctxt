@@ -1,0 +1,25 @@
+#BlueJ class context
+#Sun Aug 23 17:29:24 COT 2026
+comment0.target=Symbol
+comment0.text=\r\n Esta clase representa un simbolo de la maquina tragamonedas.\r\n Un simbolo se identifica por su color, y se dibuja en pantalla como\r\n un rectangulo. Por eso esta clase extiende (hereda de) Rectangle\:\r\n un Symbol ES un tipo especial de Rectangle, que ademas recuerda su\r\n color y su posicion en pantalla.\r\n\r\n @author Jhazael y Santiago\r\n @version 1.1 (Ciclo 1 - 2026-2)\r\n
+comment1.params=color
+comment1.target=Symbol(java.lang.String)
+comment1.text=\r\n Crea un simbolo nuevo del color indicado. Nace invisible,\r\n igual que lo hace Rectangle por defecto.\r\n\r\n @param color nombre de color CSS, por ejemplo "red" o "blue".\r\n
+comment2.params=x y
+comment2.target=void placeAt(int, int)
+comment2.text=\r\n Mueve este simbolo hasta la posicion (x, y) indicada, usando\r\n los metodos moveHorizontal y moveVertical que ya trae Rectangle.\r\n\r\n @param x nueva posicion horizontal en pixeles.\r\n @param y nueva posicion vertical en pixeles.\r\n
+comment3.target=java.lang.String getColor()
+comment3.text=\r\n @return el color CSS que identifica a este simbolo.\r\n
+comment4.target=void makeVisible()
+comment4.text=\r\n Hace visible este simbolo en el canvas. Sobreescribimos este\r\n metodo solo para poder actualizar nuestra variable estaVisible.\r\n
+comment5.params=nuevoColor
+comment5.target=void changeColor(java.lang.String)
+comment6.target=void makeInvisible()
+comment6.text=\r\n Hace invisible este simbolo. Igual que arriba, sobreescribimos\r\n solo para mantener actualizada nuestra variable estaVisible.\r\n
+comment7.params=distancia
+comment7.target=void moveHorizontal(int)
+comment7.text=\r\n Mueve el simbolo horizontalmente. Sobreescribimos este metodo\r\n para actualizar nuestra copia de la posicion (posicionActualX).\r\n\r\n @param distancia cuantos pixeles se debe mover (puede ser negativo).\r\n
+comment8.params=distancia
+comment8.target=void moveVertical(int)
+comment8.text=\r\n Mueve el simbolo verticalmente. Sobreescribimos este metodo\r\n para actualizar nuestra copia de la posicion (posicionActualY).\r\n\r\n @param distancia cuantos pixeles se debe mover (puede ser negativo).\r\n
+numComments=9

@@ -1,0 +1,27 @@
+#BlueJ class context
+#Sun Aug 23 17:29:47 COT 2026
+comment0.target=Wheel
+comment0.text=\r\n Esta clase representa una rueda de la maquina tragamonedas.\r\n\r\n Como lo dise\u00F1amos\: la rueda NO es due\u00F1a de los simbolos ya que todas las\r\n ruedas comparten la misma secuencia, que vive en SlotMachine, porque\r\n el enunciado dice que los simbolos aparecen en el mismo orden en\r\n todas las ruedas y la rueda solo recuerda cual de esos simbolos esta\r\n mostrando por su ventana.\r\n\r\n Aunque la secuencia sea compartida, cada rueda\r\n dibuja con su propio objeto Symbol. Dos ruedas pueden mostrar el\r\n mismo simbolo al mismo tiempo y un mismo rectangulo no puede estar \r\n en dos lugares de la pantalla.\r\n\r\n @author Jhazael y Santiago\r\n @version 1.0 (Ciclo 1 - 2026-2)\r\n
+comment1.params=secuencia x y
+comment1.target=Wheel(java.util.ArrayList, int, int)
+comment1.text=\r\n Crea una rueda que lee la secuencia de simbolos indicada y que\r\n se dibuja en la posicion (x, y) del canvas.\r\n\r\n @param secuencia lista de simbolos compartida con la maquina.\r\n @param x posicion horizontal de la rueda en pixeles.\r\n @param y posicion vertical de la rueda en pixeles.\r\n
+comment2.params=pasos
+comment2.target=void rotate(int)
+comment2.text=\r\n Gira la rueda la cantidad de pasos indicada. Al pasarse del\r\n final de la secuencia vuelve al principio, porque la rueda es\r\n circular. Los pasos negativos giran en sentido contrario.\r\n\r\n @param pasos cuantas posiciones avanza el simbolo mostrado.\r\n
+comment3.params=color
+comment3.target=boolean place(java.lang.String)
+comment3.text=\r\n Deja fijo, como simbolo mostrado, el que tenga el color indicado.\r\n\r\n @param color color del simbolo que se quiere mostrar.\r\n @return true si existe un simbolo de ese color; false si no.\r\n
+comment4.target=java.lang.String showingColor()
+comment4.text=\r\n @return el color que esta rueda esta mostrando en este momento,\r\n o null si todavia no hay simbolos en la secuencia.\r\n
+comment5.target=void refresh()
+comment5.text=\r\n La maquina llama a este metodo cuando la secuencia de simbolos\r\n cambio, para que la rueda ajuste su indice si quedo apuntando\r\n fuera de la lista y vuelva a pintar lo que corresponde.\r\n
+comment6.params=x y
+comment6.target=void moveTo(int, int)
+comment6.text=\r\n Mueve la rueda a otra posicion del canvas. Se usa cuando se\r\n elimina una rueda y las demas se tienen que reacomodar.\r\n\r\n @param x nueva posicion horizontal en pixeles.\r\n @param y nueva posicion vertical en pixeles.\r\n
+comment7.target=void makeVisible()
+comment7.text=\r\n Hace visible esta rueda.\r\n
+comment8.target=void makeInvisible()
+comment8.text=\r\n Hace invisible esta rueda.\r\n
+comment9.target=void actualizarSimboloVisible()
+comment9.text=\r\n Pone el rectangulo de esta rueda del color del simbolo que le\r\n corresponde mostrar, y lo dibuja solo si la rueda esta visible.\r\n Si la secuencia esta vacia no hay nada que mostrar.\r\n
+numComments=10
