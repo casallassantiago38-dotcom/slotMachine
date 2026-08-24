@@ -374,6 +374,21 @@ public class SlotMachine {
         }
     }
     
+        /**
+     * Vuelve a dibujar las ruedas para que queden por encima del cuerpo.
+     * El canvas de shapes pinta las figuras en el orden en que se
+     * dibujaron por ultima vez, asi que cada vez que el cuerpo cambia
+     * de color o de tamano queda al frente y hay que subir las ruedas.
+     */
+    private void traerRuedasAlFrente() {
+        if (!estaVisible) {
+            return;
+        }
+        for (int i = 0; i < ruedas.size(); i++) {
+            ruedas.get(i).makeVisible();
+        }
+    }
+    
     /**
      * Vuelve a poner cada rueda en su lugar de izquierda a derecha y
      * ajusta el tamano del cuerpo. Se llama cada vez que cambia el
@@ -385,8 +400,11 @@ public class SlotMachine {
                                  POSICION_Y_INICIAL);
         }
         cuerpo.changeSize(30 + 2 * MARGEN, ruedas.size() * ESPACIO_ENTRE_RUEDAS + 10);
+        traerRuedasAlFrente();
     }
-
+    
+    
+    
     /**
      * Requisito de usabilidad: la maquina debe lucir diferente cuando
      * llega al estado ganador. El cuerpo se pone amarillo.
@@ -397,6 +415,7 @@ public class SlotMachine {
         } else {
             cuerpo.changeColor("black");
         }
+        traerRuedasAlFrente();
     }
     
     /**

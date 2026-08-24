@@ -1,5 +1,5 @@
 #BlueJ class context
-#Sun Aug 23 17:29:57 COT 2026
+#Sun Aug 23 19:26:55 COT 2026
 comment0.target=SlotMachine
 comment0.text=\r\n Esta clase representa el simulador de una maquina tragamonedas.\r\n Una maquina tragamonedas tiene varias ruedas (objetos Wheel) y una\r\n secuencia de simbolos de colores (objetos Symbol).\r\n\r\n Decision de diseno\: la secuencia de simbolos es UNA SOLA y pertenece\r\n a la maquina, no a cada rueda. Esto sale del enunciado\: los simbolos\r\n aparecen en el mismo orden en todas las ruedas, y por eso addSymbol\r\n y delSymbol no reciben el numero de una rueda, mientras que\r\n placeSymbol si lo recibe. Lo que distingue a una rueda de otra no\r\n son sus simbolos, sino cual de ellos esta mostrando.\r\n\r\n @author Jhazael y santiago\r\n @version 2.0 (Ciclo 1 - 2026-2)\r\n
 comment1.target=SlotMachine()
@@ -32,13 +32,15 @@ comment2.target=void addWheel(int)
 comment2.text=\r\n Agrega una rueda nueva en la posicion indicada. La rueda nace\r\n mostrando el primer simbolo de la secuencia de la maquina.\r\n Si la posicion queda fuera de rango se ajusta al extremo mas\r\n cercano permitido.\r\n\r\n @param pos posicion donde se quiere agregar la rueda (empieza en 1).\r\n
 comment20.target=void avisarALasRuedas()
 comment20.text=\r\n Le avisa a todas las ruedas que la secuencia de simbolos cambio,\r\n para que ajusten lo que estan mostrando.\r\n
-comment21.target=void reubicarRuedas()
-comment21.text=\r\n Vuelve a poner cada rueda en su lugar de izquierda a derecha y\r\n ajusta el tamano del cuerpo. Se llama cada vez que cambia el\r\n numero de ruedas, para que no queden huecos.\r\n
-comment22.target=void actualizarEstadoGanador()
-comment22.text=\r\n Requisito de usabilidad\: la maquina debe lucir diferente cuando\r\n llega al estado ganador. El cuerpo se pone amarillo.\r\n
-comment23.params=mensaje
-comment23.target=void fallar(java.lang.String)
-comment23.text=\r\n Marca la ultima operacion como fallida y le avisa al usuario,\r\n pero SOLO si el simulador esta visible. Si esta invisible, la\r\n operacion falla en silencio (requisito de usabilidad numero 4).\r\n\r\n @param mensaje texto que se le quiere mostrar al usuario.\r\n
+comment21.target=void traerRuedasAlFrente()
+comment21.text=\r\n Vuelve a dibujar las ruedas para que queden por encima del cuerpo.\r\n El canvas de shapes pinta las figuras en el orden en que se\r\n dibujaron por ultima vez, asi que cada vez que el cuerpo cambia\r\n de color o de tamano queda al frente y hay que subir las ruedas.\r\n
+comment22.target=void reubicarRuedas()
+comment22.text=\r\n Vuelve a poner cada rueda en su lugar de izquierda a derecha y\r\n ajusta el tamano del cuerpo. Se llama cada vez que cambia el\r\n numero de ruedas, para que no queden huecos.\r\n
+comment23.target=void actualizarEstadoGanador()
+comment23.text=\r\n Requisito de usabilidad\: la maquina debe lucir diferente cuando\r\n llega al estado ganador. El cuerpo se pone amarillo.\r\n
+comment24.params=mensaje
+comment24.target=void fallar(java.lang.String)
+comment24.text=\r\n Marca la ultima operacion como fallida y le avisa al usuario,\r\n pero SOLO si el simulador esta visible. Si esta invisible, la\r\n operacion falla en silencio (requisito de usabilidad numero 4).\r\n\r\n @param mensaje texto que se le quiere mostrar al usuario.\r\n
 comment3.params=pos
 comment3.target=void delWheel(int)
 comment3.text=\r\n Elimina la rueda que esta en la posicion indicada.\r\n\r\n @param pos posicion de la rueda a eliminar (empieza en 1).\r\n
@@ -58,4 +60,4 @@ comment8.target=void spin()
 comment8.text=\r\n Gira todas las ruedas de la maquina, una por una.\r\n
 comment9.target=java.lang.String[] symbols()
 comment9.text=\r\n @return los colores de los simbolos de la maquina, en el mismo\r\n orden en que estan en la secuencia (empezando en la posicion 1).\r\n
-numComments=24
+numComments=25
