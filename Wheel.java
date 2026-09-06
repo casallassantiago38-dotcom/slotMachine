@@ -35,6 +35,9 @@ public class Wheel {
  
     // Indica si esta rueda esta en modo visible.
     private boolean estaVisible;
+    
+    // Indicia si la rueda esta bloqueada.
+    private boolean bloqueada;
  
     /**
      * Crea una rueda que lee la secuencia de simbolos indicada y que
@@ -47,6 +50,7 @@ public class Wheel {
     public Wheel(ArrayList<Symbol> secuencia, int x, int y) {
         this.secuencia = secuencia;
         this.indiceMostrado = 0;
+        this.bloqueada = false;
         this.posicionX = x;
         this.posicionY = y;
         this.estaVisible = false;
@@ -54,7 +58,29 @@ public class Wheel {
         this.simboloVisible.placeAt(x, y);
         actualizarSimboloVisible();
     }
- 
+    
+    /**
+     * actualiza el estado de la rueda a false.
+     */
+    public void desbloquearRueda(){
+         bloqueada = false;
+    }
+    
+    /**
+     * actualiza el estado de la rueda a true.
+     */
+    public void bloquearRueda(){
+         bloqueada = true;
+    }
+    
+    /**
+     * retorna el valor de la rueda que esté en ese momento.
+     * @return true si está bloqueada, false si no.
+     */
+    public boolean informarEstadoRueda(){
+         return bloqueada;
+    }
+    
     /**
      * Gira la rueda la cantidad de pasos indicada. Al pasarse del
      * final de la secuencia vuelve al principio, porque la rueda es
@@ -89,7 +115,7 @@ public class Wheel {
         }
         return false;
     }
- 
+    
     /**
      * @return el color que esta rueda esta mostrando en este momento,
      * o null si todavia no hay simbolos en la secuencia.

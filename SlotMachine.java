@@ -91,10 +91,9 @@ public class SlotMachine {
         actualizarEstadoGanador();
         operacionExitosa = true;
     }
-
+    
     /**
      * Elimina la rueda que esta en la posicion indicada.
-     *
      * @param pos posicion de la rueda a eliminar (empieza en 1).
      */
     public void delWheel(int pos) {
@@ -111,7 +110,139 @@ public class SlotMachine {
         actualizarEstadoGanador();
         operacionExitosa = true;
     }
+    
+    /**
+     * Bloquea la rueda.
+     * @param wheel posicion de la rueda a bloquear (empieza en 1).
+     */
+    public void lock(int wheel){
+        if(ruedas.isEmpty()){
+            fallar("No se puede ejecutar la accion de bloquear una rueda cuando no hay ruedas");
+            return;
+        }
+        int indice = ajustarPosicion(wheel, ruedas.size()); 
+        ruedas.get(indice).bloquearRueda();
+        operacionExitosa = true;
+        
+    }
+    
+    /**
+     * Desbloquea la rueda.
+     * @param wheel posicion de la rueda a desbloquear (empieza en 1).
+     */
+    public void unlock(int wheel){
+        if(ruedas.isEmpty()){
+            fallar("No se puede ejecutar la accion de desbloquear una rueda cuando no hay ruedas");
+            return;
+        }
+        int indice = ajustarPosicion(wheel, ruedas.size()); 
+        ruedas.get(indice).desbloquearRueda();
+        operacionExitosa = true;
+    }
+    
+    /**
+     * Gira una rueda especifica la cantidad de pasos indicada.
+     * Si la rueda esta bloqueada la operacion falla.
+     *
+     * @param wheel posicion de la rueda a girar (empieza en 1).
+     * @param steps cuantos pasos gira la rueda; los negativos giran al reves.
+     */
+    public void spin(int wheel, int steps) {
+        if (ruedas.isEmpty()) {
+            fallar("No hay ruedas para girar.");
+            return;
+        }
+        if (simbolos.isEmpty()) {
+            fallar("La maquina no tiene simbolos configurados.");
+            return;
+        }
+        int indice = ajustarPosicion(wheel, ruedas.size());
 
+        if (ruedas.get(indice).informarEstadoRueda()) {
+            fallar("La rueda esta bloqueada y no se puede girar.");
+            return;
+        }
+
+        int direccion = steps >= 0 ? 1 : -1;
+        int cantidadPasos = Math.abs(steps);
+        for (int i = 0; i < cantidadPasos; i++) {
+            ruedas.get(indice).rotate(direccion);
+        if (estaVisible) {
+            Canvas.getCanvas().wait(150);
+            }
+        }
+
+        actualizarEstadoGanador();
+        operacionExitosa = true;
+    }
+    
+    /**
+     * Deja la maquina en la configuracion indicada: cada rueda muestra
+     * el color que le corresponde en el arreglo.
+     * La operacion es atomica: si algo no cuadra no se cambia nada.
+     *
+     * @param setSymbols colores que debe mostrar cada rueda, de izquierda a derecha.
+     */
+    public void spin(String[] setSymbols) {
+        if (setSymbols == null) {
+            fallar("No se recibio una configuracion.");
+            return;
+        }
+        if (setSymbols.length != ruedas.size()) {
+            fallar("La configuracion no tiene un color por cada rueda.");
+            return;
+        }
+        for (int i = 0; i < setSymbols.length; i++) {
+            if (buscarSimbolo(setSymbols[i]) < 0) {
+                fallar("La maquina no tiene un simbolo de color " + setSymbols[i] + ".");
+                return;
+            }
+            if (ruedas.get(i).informarEstadoRueda()
+                    && !setSymbols[i].equals(ruedas.get(i).showingColor())) {
+                fallar("Una rueda bloqueada tendria que cambiar de simbolo.");
+                return;
+            }
+        }
+
+        for (int i = 0; i < ruedas.size(); i++) {
+            ruedas.get(i).place(setSymbols[i]);
+        }
+
+        actualizarEstadoGanador();
+        operacionExitosa = true;
+    }
+    
+    /**
+     * Swap basicamente primero compara si hay dos o mas ruedas si hay menos de una rueda falla si las posiciones son iguales o se intenta
+     * intercambiar la misma rueda es no hacer nada falla, no pasan numeros negativos y intercambia las posiciones usando una variable 
+     * temporal.
+     * 
+     * @param wheel1 rueda ingresada primero por el usuario la posicion empieza en 1, si se sale del rango ajusta al extremo mas cercano.
+     * @param wheel2 rueda ingresada de segundo por el usuario si se sale del rango ajusta al extremo mas cercano.
+     * 
+     */
+    
+    public void swap(int wheel1, int wheel2){
+        if(ruedas.size() <= 1){
+            fallar("Se necesitan como minimo dos ruedas para hacer un intercambio obvio");
+            return;
+        }
+        int posicion1 = ajustarPosicion(wheel1,ruedas.size());
+        int posicion2 = ajustarPosicion(wheel2,ruedas.size());
+        if (posicion1 == posicion2) {
+            fallar("No se pueden intercambiar dos ruedas que están en la misma posición.");
+            return;
+        }
+        Wheel tempvariabl = ruedas.get(posicion1);
+        
+        ruedas.set(posicion1,ruedas.get(posicion2));
+        ruedas.set(posicion2,tempvariabl);
+        
+        reubicarRuedas();
+        actualizarEstadoGanador();
+        operacionExitosa = true;
+    }
+    
     /**
      * Agrega un simbolo del color indicado a la secuencia de la
      * maquina, en la posicion pedida. El simbolo queda disponible
@@ -161,6 +292,7 @@ public class SlotMachine {
     /**
      * Deja fijo, en la rueda indicada, el simbolo del color indicado
      * como el simbolo que se esta mostrando.
+     * Si la rueda esta bloqueada la operacion falla.
      *
      * @param wheel  posicion de la rueda (empieza en 1).
      * @param symbol color del simbolo que se quiere mostrar.
@@ -172,17 +304,23 @@ public class SlotMachine {
         }
         int indice = ajustarPosicion(wheel, ruedas.size());
 
+        if (ruedas.get(indice).informarEstadoRueda()) {
+            fallar("La rueda esta bloqueada y no se puede cambiar su simbolo.");
+            return;
+        }
+
         if (!ruedas.get(indice).place(symbol)) {
             fallar("La maquina no tiene un simbolo de ese color.");
             return;
         }
-        
+
         actualizarEstadoGanador();
         operacionExitosa = true;
     }
 
     /**
-     * Gira una sola rueda de la maquina.
+     * Gira una sola rueda de la maquina una cantidad de pasos al azar.
+     * Si la rueda esta bloqueada la operacion falla.
      *
      * @param wheel posicion de la rueda a girar (empieza en 1).
      */
@@ -197,14 +335,20 @@ public class SlotMachine {
         }
         int indice = ajustarPosicion(wheel, ruedas.size());
 
+        if (ruedas.get(indice).informarEstadoRueda()) {
+            fallar("La rueda esta bloqueada y no se puede girar.");
+            return;
+        }
+
         ruedas.get(indice).rotate(azar.nextInt(simbolos.size()));
-        
+
         actualizarEstadoGanador();
         operacionExitosa = true;
     }
 
     /**
      * Gira todas las ruedas de la maquina, una por una.
+     * Las ruedas bloqueadas se saltan y la operacion sigue siendo exitosa.
      */
     public void spin() {
         if (ruedas.isEmpty()) {
@@ -217,9 +361,12 @@ public class SlotMachine {
         }
 
         for (int i = 0; i < ruedas.size(); i++) {
+            if (ruedas.get(i).informarEstadoRueda()) {
+                continue;
+            }
             ruedas.get(i).rotate(azar.nextInt(simbolos.size()));
         }
-        
+
         actualizarEstadoGanador();
         operacionExitosa = true;
     }
@@ -402,7 +549,6 @@ public class SlotMachine {
         cuerpo.changeSize(30 + 2 * MARGEN, ruedas.size() * ESPACIO_ENTRE_RUEDAS + 10);
         traerRuedasAlFrente();
     }
-    
     
     
     /**

@@ -1,5 +1,5 @@
 #BlueJ class context
-#Sun Aug 23 17:29:24 COT 2026
+#Sat Sep 05 14:28:13 COT 2026
 comment0.target=Symbol
 comment0.text=\r\n Esta clase representa un simbolo de la maquina tragamonedas.\r\n Un simbolo se identifica por su color, y se dibuja en pantalla como\r\n un rectangulo. Por eso esta clase extiende (hereda de) Rectangle\:\r\n un Symbol ES un tipo especial de Rectangle, que ademas recuerda su\r\n color y su posicion en pantalla.\r\n\r\n @author Jhazael y Santiago\r\n @version 1.1 (Ciclo 1 - 2026-2)\r\n
 comment1.params=color
