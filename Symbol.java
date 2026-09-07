@@ -1,113 +1,114 @@
 /**
- * Esta clase representa un simbolo de la maquina tragamonedas.
- * Un simbolo se identifica por su color, y se dibuja en pantalla como
- * un rectangulo. Por eso esta clase extiende (hereda de) Rectangle:
- * un Symbol ES un tipo especial de Rectangle, que ademas recuerda su
- * color y su posicion en pantalla.
+ * This class represents a symbol of the slot machine.
+ * A symbol is identified by its color, and it is drawn on screen as
+ * a rectangle. That is why this class extends (inherits from)
+ * Rectangle: a Symbol IS a special kind of Rectangle that also
+ * remembers its color and its position on screen.
  *
- * @author Jhazael y Santiago
- * @version 1.1 (Ciclo 1 - 2026-2)
+ * @author Jhazael and Santiago
+ * @version 1.1 (Cycle 1 - 2026-2)
  */
 public class Symbol extends Rectangle {
 
-    // Color CSS que identifica a este simbolo, por ejemplo "red".
+    // CSS color that identifies this symbol, for example "red".
     private String color;
 
-    // Rectangle guarda la posicion (x, y) como atributos privados, y
-    // nosotros no podemos leerlos directamente desde esta clase.
-    // Por eso llevamos nuestra propia copia de la posicion aqui.
-    private int posicionActualX;
-    private int posicionActualY;
+    // Rectangle stores the (x, y) position as private attributes, and
+    // we cannot read them directly from this class.
+    // That is why we keep our own copy of the position here.
+    private int currentX;
+    private int currentY;
 
-    // Recordamos si este simbolo esta visible en este momento.
-    private boolean estaVisible;
+    // Remembers whether this symbol is currently visible.
+    private boolean isVisible;
 
     /**
-     * Crea un simbolo nuevo del color indicado. Nace invisible,
-     * igual que lo hace Rectangle por defecto.
+     * Creates a new symbol of the indicated color. It is born
+     * invisible, just like Rectangle does by default.
      *
-     * @param color nombre de color CSS, por ejemplo "red" o "blue".
+     * @param color CSS color name, for example "red" or "blue".
      */
     public Symbol(String color) {
         super();
         this.color = color;
         changeColor(color);
 
-        // estos valores deben coincidir con la posicion inicial que
-        // usa el constructor de Rectangle (xPosition = 70, yPosition = 15)
-        posicionActualX = 70;
-        posicionActualY = 15;
-        estaVisible = false;
+        // these values must match the initial position used by the
+        // Rectangle constructor (xPosition = 70, yPosition = 15)
+        currentX = 70;
+        currentY = 15;
+        isVisible = false;
     }
 
     /**
-     * Mueve este simbolo hasta la posicion (x, y) indicada, usando
-     * los metodos moveHorizontal y moveVertical que ya trae Rectangle.
+     * Moves this symbol to the indicated (x, y) position, using the
+     * moveHorizontal and moveVertical methods already provided by
+     * Rectangle.
      *
-     * @param x nueva posicion horizontal en pixeles.
-     * @param y nueva posicion vertical en pixeles.
+     * @param x new horizontal position in pixels.
+     * @param y new vertical position in pixels.
      */
     public void placeAt(int x, int y) {
-        int distanciaHorizontal = x - posicionActualX;
-        int distanciaVertical = y - posicionActualY;
-        moveHorizontal(distanciaHorizontal);
-        moveVertical(distanciaVertical);
+        int horizontalDistance = x - currentX;
+        int verticalDistance = y - currentY;
+        moveHorizontal(horizontalDistance);
+        moveVertical(verticalDistance);
     }
 
     /**
-     * @return el color CSS que identifica a este simbolo.
+     * @return the CSS color that identifies this symbol.
      */
     public String getColor() {
         return color;
     }
 
     /**
-     * Hace visible este simbolo en el canvas. Sobreescribimos este
-     * metodo solo para poder actualizar nuestra variable estaVisible.
+     * Makes this symbol visible on the canvas. We override this
+     * method only to be able to update our isVisible variable.
      */
     @Override
     public void makeVisible() {
         super.makeVisible();
-        estaVisible = true;
+        isVisible = true;
     }
 
     @Override
-    public void changeColor(String nuevoColor) {
-        super.changeColor(nuevoColor);
-        this.color = nuevoColor;
+    public void changeColor(String newColor) {
+        super.changeColor(newColor);
+        this.color = newColor;
     }
-    
+
     /**
-     * Hace invisible este simbolo. Igual que arriba, sobreescribimos
-     * solo para mantener actualizada nuestra variable estaVisible.
+     * Makes this symbol invisible. Same as above, we override this
+     * method only to keep our isVisible variable up to date.
      */
     @Override
     public void makeInvisible() {
         super.makeInvisible();
-        estaVisible = false;
+        isVisible = false;
     }
 
     /**
-     * Mueve el simbolo horizontalmente. Sobreescribimos este metodo
-     * para actualizar nuestra copia de la posicion (posicionActualX).
+     * Moves the symbol horizontally. We override this method to
+     * update our own copy of the position (currentX).
      *
-     * @param distancia cuantos pixeles se debe mover (puede ser negativo).
+     * @param distance how many pixels it should move (can be negative).
      */
     @Override
-    public void moveHorizontal(int distancia) {
-        super.moveHorizontal(distancia);
-        posicionActualX = posicionActualX + distancia;
+    public void moveHorizontal(int distance) {
+        super.moveHorizontal(distance);
+        currentX = currentX + distance;
     }
 
     /**
-     * Mueve el simbolo verticalmente. Sobreescribimos este metodo
-     * para actualizar nuestra copia de la posicion (posicionActualY).
+     * Moves the symbol vertically. We override this method to
+     * update our own copy of the position (currentY).
      *
-     * @param distancia cuantos pixeles se debe mover (puede ser negativo).
+     * @param distance how many pixels it should move (can be negative).
      */
     @Override
-    public void moveVertical(int distancia) {
-        super.moveVertical(distancia);
-        posicionActualY = posicionActualY + distancia;
+    public void moveVertical(int distance) {
+        super.moveVertical(distance);
+        currentY = currentY + distance;
     }
 }

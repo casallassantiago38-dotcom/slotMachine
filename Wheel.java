@@ -1,190 +1,190 @@
 import java.util.ArrayList;
- 
+
 /**
- * Esta clase representa una rueda de la maquina tragamonedas.
+ * This class represents a wheel of the slot machine.
  *
- * Como lo diseñamos: la rueda NO es dueña de los simbolos ya que todas las
- * ruedas comparten la misma secuencia, que vive en SlotMachine, porque
- * el enunciado dice que los simbolos aparecen en el mismo orden en
- * todas las ruedas y la rueda solo recuerda cual de esos simbolos esta
- * mostrando por su ventana.
+ * Design decision: the wheel does NOT own the symbols, since all
+ * wheels share the same sequence, which lives in SlotMachine, because
+ * the assignment states that symbols appear in the same order in
+ * every wheel, and the wheel only remembers which of those symbols
+ * it is currently showing through its window.
  *
- * Aunque la secuencia sea compartida, cada rueda
- * dibuja con su propio objeto Symbol. Dos ruedas pueden mostrar el
- * mismo simbolo al mismo tiempo y un mismo rectangulo no puede estar 
- * en dos lugares de la pantalla.
+ * Even though the sequence is shared, each wheel draws with its own
+ * Symbol object. Two wheels can show the same symbol at the same
+ * time, and a single rectangle cannot be in two places on the screen
+ * at once.
  *
- * @author Jhazael y Santiago
- * @version 1.0 (Ciclo 1 - 2026-2)
+ * @author Jhazael and Santiago
+ * @version 1.1 (Cycle 2 - 2026-2)
  */
 public class Wheel {
- 
-    // Secuencia de simbolos compartida con la maquina. La rueda solo
-    // la lee: nunca agrega ni elimina simbolos de ella.
-    private ArrayList<Symbol> secuencia;
- 
-    // Posicion, dentro de la secuencia, del simbolo que se muestra.
-    private int indiceMostrado;
- 
-    // El rectangulo propio de esta rueda, el que se ve en pantalla.
-    private Symbol simboloVisible;
- 
-    // Donde se dibuja esta rueda en el canvas.
-    private int posicionX;
-    private int posicionY;
- 
-    // Indica si esta rueda esta en modo visible.
-    private boolean estaVisible;
-    
-    // Indicia si la rueda esta bloqueada.
-    private boolean bloqueada;
- 
+
+    // Symbol sequence shared with the machine. The wheel only reads
+    // it: it never adds nor removes symbols from it.
+    private ArrayList<Symbol> sequence;
+
+    // Position, within the sequence, of the symbol being shown.
+    private int shownIndex;
+
+    // This wheel's own rectangle, the one seen on screen.
+    private Symbol visibleSymbol;
+
+    // Where this wheel is drawn on the canvas.
+    private int xPosition;
+    private int yPosition;
+
+    // Indicates whether this wheel is in visible mode.
+    private boolean isVisible;
+
+    // Indicates whether the wheel is locked.
+    private boolean locked;
+
     /**
-     * Crea una rueda que lee la secuencia de simbolos indicada y que
-     * se dibuja en la posicion (x, y) del canvas.
+     * Creates a wheel that reads the indicated symbol sequence and is
+     * drawn at position (x, y) of the canvas.
      *
-     * @param secuencia lista de simbolos compartida con la maquina.
-     * @param x posicion horizontal de la rueda en pixeles.
-     * @param y posicion vertical de la rueda en pixeles.
+     * @param sequence symbol list shared with the machine.
+     * @param x horizontal position of the wheel in pixels.
+     * @param y vertical position of the wheel in pixels.
      */
-    public Wheel(ArrayList<Symbol> secuencia, int x, int y) {
-        this.secuencia = secuencia;
-        this.indiceMostrado = 0;
-        this.bloqueada = false;
-        this.posicionX = x;
-        this.posicionY = y;
-        this.estaVisible = false;
-        this.simboloVisible = new Symbol("black");
-        this.simboloVisible.placeAt(x, y);
-        actualizarSimboloVisible();
+    public Wheel(ArrayList<Symbol> sequence, int x, int y) {
+        this.sequence = sequence;
+        this.shownIndex = 0;
+        this.locked = false;
+        this.xPosition = x;
+        this.yPosition = y;
+        this.isVisible = false;
+        this.visibleSymbol = new Symbol("black");
+        this.visibleSymbol.placeAt(x, y);
+        updateVisibleSymbol();
     }
-    
+
     /**
-     * actualiza el estado de la rueda a false.
+     * Sets the wheel's locked state to false.
      */
-    public void desbloquearRueda(){
-         bloqueada = false;
+    public void unlockWheel() {
+        locked = false;
     }
-    
+
     /**
-     * actualiza el estado de la rueda a true.
+     * Sets the wheel's locked state to true.
      */
-    public void bloquearRueda(){
-         bloqueada = true;
+    public void lockWheel() {
+        locked = true;
     }
-    
+
     /**
-     * retorna el valor de la rueda que esté en ese momento.
-     * @return true si está bloqueada, false si no.
+     * @return true if the wheel is currently locked, false otherwise.
      */
-    public boolean informarEstadoRueda(){
-         return bloqueada;
+    public boolean isLocked() {
+        return locked;
     }
-    
+
     /**
-     * Gira la rueda la cantidad de pasos indicada. Al pasarse del
-     * final de la secuencia vuelve al principio, porque la rueda es
-     * circular. Los pasos negativos giran en sentido contrario.
+     * Rotates the wheel the indicated number of steps. When it goes
+     * past the end of the sequence it wraps back to the beginning,
+     * because the wheel is circular. Negative steps rotate in the
+     * opposite direction.
      *
-     * @param pasos cuantas posiciones avanza el simbolo mostrado.
+     * @param steps how many positions the shown symbol moves.
      */
-    public void rotate(int pasos) {
-        if (secuencia.isEmpty()) {
+    public void rotate(int steps) {
+        if (sequence.isEmpty()) {
             return;
         }
-        int cantidad = secuencia.size();
-        // el doble modulo es para que un giro negativo tambien caiga
-        // dentro del rango 0..cantidad-1
-        indiceMostrado = ((indiceMostrado + pasos) % cantidad + cantidad) % cantidad;
-        actualizarSimboloVisible();
+        int count = sequence.size();
+        // the double modulo makes a negative rotation also fall
+        // within the range 0..count-1
+        shownIndex = ((shownIndex + steps) % count + count) % count;
+        updateVisibleSymbol();
     }
- 
+
     /**
-     * Deja fijo, como simbolo mostrado, el que tenga el color indicado.
+     * Fixes, as the shown symbol, the one with the indicated color.
      *
-     * @param color color del simbolo que se quiere mostrar.
-     * @return true si existe un simbolo de ese color; false si no.
+     * @param color color of the symbol to be shown.
+     * @return true if a symbol of that color exists; false otherwise.
      */
     public boolean place(String color) {
-        for (int i = 0; i < secuencia.size(); i++) {
-            if (secuencia.get(i).getColor().equals(color)) {
-                indiceMostrado = i;
-                actualizarSimboloVisible();
+        for (int i = 0; i < sequence.size(); i++) {
+            if (sequence.get(i).getColor().equals(color)) {
+                shownIndex = i;
+                updateVisibleSymbol();
                 return true;
             }
         }
         return false;
     }
-    
+
     /**
-     * @return el color que esta rueda esta mostrando en este momento,
-     * o null si todavia no hay simbolos en la secuencia.
+     * @return the color this wheel is currently showing, or null if
+     * there are no symbols yet in the sequence.
      */
     public String showingColor() {
-        if (secuencia.isEmpty()) {
+        if (sequence.isEmpty()) {
             return null;
         }
-        return secuencia.get(indiceMostrado).getColor();
+        return sequence.get(shownIndex).getColor();
     }
- 
+
     /**
-     * La maquina llama a este metodo cuando la secuencia de simbolos
-     * cambio, para que la rueda ajuste su indice si quedo apuntando
-     * fuera de la lista y vuelva a pintar lo que corresponde.
+     * The machine calls this method when the symbol sequence changes,
+     * so that the wheel adjusts its index if it ended up pointing
+     * outside the list, and redraws what corresponds.
      */
     public void refresh() {
-        if (secuencia.isEmpty()) {
-            indiceMostrado = 0;
-        } else if (indiceMostrado >= secuencia.size()) {
-            indiceMostrado = secuencia.size() - 1;
+        if (sequence.isEmpty()) {
+            shownIndex = 0;
+        } else if (shownIndex >= sequence.size()) {
+            shownIndex = sequence.size() - 1;
         }
-        actualizarSimboloVisible();
+        updateVisibleSymbol();
     }
- 
+
     /**
-     * Mueve la rueda a otra posicion del canvas. Se usa cuando se
-     * elimina una rueda y las demas se tienen que reacomodar.
+     * Moves the wheel to another position on the canvas. Used when a
+     * wheel is removed and the rest need to be rearranged.
      *
-     * @param x nueva posicion horizontal en pixeles.
-     * @param y nueva posicion vertical en pixeles.
+     * @param x new horizontal position in pixels.
+     * @param y new vertical position in pixels.
      */
     public void moveTo(int x, int y) {
-        posicionX = x;
-        posicionY = y;
-        simboloVisible.placeAt(x, y);
+        xPosition = x;
+        yPosition = y;
+        visibleSymbol.placeAt(x, y);
     }
- 
+
     /**
-     * Hace visible esta rueda.
+     * Makes this wheel visible.
      */
     public void makeVisible() {
-        estaVisible = true;
-        actualizarSimboloVisible();
+        isVisible = true;
+        updateVisibleSymbol();
     }
- 
+
     /**
-     * Hace invisible esta rueda.
+     * Makes this wheel invisible.
      */
     public void makeInvisible() {
-        estaVisible = false;
-        simboloVisible.makeInvisible();
+        isVisible = false;
+        visibleSymbol.makeInvisible();
     }
- 
+
     /**
-     * Pone el rectangulo de esta rueda del color del simbolo que le
-     * corresponde mostrar, y lo dibuja solo si la rueda esta visible.
-     * Si la secuencia esta vacia no hay nada que mostrar.
+     * Sets this wheel's rectangle to the color of the symbol it is
+     * supposed to show, and draws it only if the wheel is visible.
+     * If the sequence is empty there is nothing to show.
      */
-    private void actualizarSimboloVisible() {
-        if (secuencia.isEmpty()) {
-            simboloVisible.makeInvisible();
+    private void updateVisibleSymbol() {
+        if (sequence.isEmpty()) {
+            visibleSymbol.makeInvisible();
             return;
         }
-        simboloVisible.changeColor(secuencia.get(indiceMostrado).getColor());
-        if (estaVisible) {
-            simboloVisible.makeVisible();
+        visibleSymbol.changeColor(sequence.get(shownIndex).getColor());
+        if (isVisible) {
+            visibleSymbol.makeVisible();
         } else {
-            simboloVisible.makeInvisible();
+            visibleSymbol.makeInvisible();
         }
     }
 }

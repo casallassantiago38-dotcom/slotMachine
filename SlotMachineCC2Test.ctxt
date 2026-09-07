@@ -1,0 +1,11 @@
+#BlueJ class context
+#Sun Sep 06 19:52:35 COT 2026
+comment0.target=SlotMachineCC2Test
+comment0.text=\r\n Shared unit tests contributed to the course wiki.\r\n All tests run in invisible mode.\r\n\r\n @author Jhazael and Santiago\r\n @version 1.0 (Cycle 2 - 2026-2)\r\n
+comment1.target=void setUp()
+comment2.target=void tearDown()
+comment3.target=void accordingCjPmShouldSwapLockUnlockAndSpinSuccessfully()
+comment3.text=\r\n Swapping two unlocked wheels, locking and unlocking one, and\r\n spinning it afterwards should all succeed.\r\n
+comment4.target=void accordingCjPmShouldNotSpinLockedWheel()
+comment4.text=\r\n Spinning a locked wheel with spin(wheel, steps) must fail and\r\n leave what that wheel shows unchanged.\r\n
+numComments=5

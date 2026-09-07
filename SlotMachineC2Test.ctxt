@@ -1,0 +1,11 @@
+#BlueJ class context
+#Sun Sep 06 19:52:13 COT 2026
+comment0.target=SlotMachineC2Test
+comment0.text=\r\n Unit tests for the Cycle 2 methods of SlotMachine.\r\n All tests run in invisible mode so no dialogs or graphics\r\n interrupt the run.\r\n\r\n @author Jhazael and Santiago\r\n @version 1.0 (Cycle 2 - 2026-2)\r\n
+comment1.target=void setUp()
+comment2.target=void tearDown()
+comment3.target=void shouldOnlyChangeConfigurationAfterUnlockingWheel()
+comment3.text=\r\n Locking a wheel prevents spin(wheel, steps) from changing\r\n configuration(); unlocking it allows the change again.\r\n
+comment4.target=void shouldReachJackpotWithSpinBySetSymbolsAndFailAtomicallyOtherwise()
+comment4.text=\r\n spin(String[]) can place every wheel in the same color at once,\r\n and must fail atomically when the configuration is invalid.\r\n
+numComments=5

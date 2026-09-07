@@ -1,25 +1,25 @@
 #BlueJ class context
-#Sat Sep 05 14:28:13 COT 2026
+#Sun Sep 06 19:31:16 COT 2026
 comment0.target=Symbol
-comment0.text=\r\n Esta clase representa un simbolo de la maquina tragamonedas.\r\n Un simbolo se identifica por su color, y se dibuja en pantalla como\r\n un rectangulo. Por eso esta clase extiende (hereda de) Rectangle\:\r\n un Symbol ES un tipo especial de Rectangle, que ademas recuerda su\r\n color y su posicion en pantalla.\r\n\r\n @author Jhazael y Santiago\r\n @version 1.1 (Ciclo 1 - 2026-2)\r\n
+comment0.text=\r\n This class represents a symbol of the slot machine.\r\n A symbol is identified by its color, and it is drawn on screen as\r\n a rectangle. That is why this class extends (inherits from)\r\n Rectangle\: a Symbol IS a special kind of Rectangle that also\r\n remembers its color and its position on screen.\r\n\r\n @author Jhazael and Santiago\r\n @version 1.1 (Cycle 1 - 2026-2)\r\n
 comment1.params=color
 comment1.target=Symbol(java.lang.String)
-comment1.text=\r\n Crea un simbolo nuevo del color indicado. Nace invisible,\r\n igual que lo hace Rectangle por defecto.\r\n\r\n @param color nombre de color CSS, por ejemplo "red" o "blue".\r\n
+comment1.text=\r\n Creates a new symbol of the indicated color. It is born\r\n invisible, just like Rectangle does by default.\r\n\r\n @param color CSS color name, for example "red" or "blue".\r\n
 comment2.params=x y
 comment2.target=void placeAt(int, int)
-comment2.text=\r\n Mueve este simbolo hasta la posicion (x, y) indicada, usando\r\n los metodos moveHorizontal y moveVertical que ya trae Rectangle.\r\n\r\n @param x nueva posicion horizontal en pixeles.\r\n @param y nueva posicion vertical en pixeles.\r\n
+comment2.text=\r\n Moves this symbol to the indicated (x, y) position, using the\r\n moveHorizontal and moveVertical methods already provided by\r\n Rectangle.\r\n\r\n @param x new horizontal position in pixels.\r\n @param y new vertical position in pixels.\r\n
 comment3.target=java.lang.String getColor()
-comment3.text=\r\n @return el color CSS que identifica a este simbolo.\r\n
+comment3.text=\r\n @return the CSS color that identifies this symbol.\r\n
 comment4.target=void makeVisible()
-comment4.text=\r\n Hace visible este simbolo en el canvas. Sobreescribimos este\r\n metodo solo para poder actualizar nuestra variable estaVisible.\r\n
-comment5.params=nuevoColor
+comment4.text=\r\n Makes this symbol visible on the canvas. We override this\r\n method only to be able to update our isVisible variable.\r\n
+comment5.params=newColor
 comment5.target=void changeColor(java.lang.String)
 comment6.target=void makeInvisible()
-comment6.text=\r\n Hace invisible este simbolo. Igual que arriba, sobreescribimos\r\n solo para mantener actualizada nuestra variable estaVisible.\r\n
-comment7.params=distancia
+comment6.text=\r\n Makes this symbol invisible. Same as above, we override this\r\n method only to keep our isVisible variable up to date.\r\n
+comment7.params=distance
 comment7.target=void moveHorizontal(int)
-comment7.text=\r\n Mueve el simbolo horizontalmente. Sobreescribimos este metodo\r\n para actualizar nuestra copia de la posicion (posicionActualX).\r\n\r\n @param distancia cuantos pixeles se debe mover (puede ser negativo).\r\n
-comment8.params=distancia
+comment7.text=\r\n Moves the symbol horizontally. We override this method to\r\n update our own copy of the position (currentX).\r\n\r\n @param distance how many pixels it should move (can be negative).\r\n
+comment8.params=distance
 comment8.target=void moveVertical(int)
-comment8.text=\r\n Mueve el simbolo verticalmente. Sobreescribimos este metodo\r\n para actualizar nuestra copia de la posicion (posicionActualY).\r\n\r\n @param distancia cuantos pixeles se debe mover (puede ser negativo).\r\n
+comment8.text=\r\n Moves the symbol vertically. We override this method to\r\n update our own copy of the position (currentY).\r\n\r\n @param distance how many pixels it should move (can be negative).\r\n
 numComments=9

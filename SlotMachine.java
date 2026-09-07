@@ -3,578 +3,578 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 /**
- * Esta clase representa el simulador de una maquina tragamonedas.
- * Una maquina tragamonedas tiene varias ruedas (objetos Wheel) y una
- * secuencia de simbolos de colores (objetos Symbol).
+ * This class represents the simulator of a slot machine.
+ * A slot machine has several wheels (Wheel objects) and a sequence
+ * of colored symbols (Symbol objects).
  *
- * Decision de diseno: la secuencia de simbolos es UNA SOLA y pertenece
- * a la maquina, no a cada rueda. Esto sale del enunciado: los simbolos
- * aparecen en el mismo orden en todas las ruedas, y por eso addSymbol
- * y delSymbol no reciben el numero de una rueda, mientras que
- * placeSymbol si lo recibe. Lo que distingue a una rueda de otra no
- * son sus simbolos, sino cual de ellos esta mostrando.
+ * Design decision: there is only ONE symbol sequence and it belongs
+ * to the machine, not to each wheel. This follows from the
+ * assignment: symbols appear in the same order on every wheel, and
+ * that is why addSymbol and delSymbol do not receive a wheel number,
+ * while placeSymbol does receive one. What distinguishes one wheel
+ * from another is not its symbols, but which of them it is showing.
  *
- * @author Jhazael y santiago
- * @version 2.0 (Ciclo 1 - 2026-2)
+ * @author Jhazael and Santiago
+ * @version 2.1 (Cycle 2 - 2026-2)
  */
 public class SlotMachine {
 
-    // Secuencia de simbolos de la maquina. Todas las ruedas la comparten.
-    private ArrayList<Symbol> simbolos;
+    // Symbol sequence of the machine. All wheels share it.
+    private ArrayList<Symbol> symbols;
 
-    // Lista con todas las ruedas que tiene la maquina en este momento.
-    private ArrayList<Wheel> ruedas;
+    // List with all the wheels the machine currently has.
+    private ArrayList<Wheel> wheels;
 
-    // Indica si el simulador esta en modo visible o invisible.
-    private boolean estaVisible;
+    // Indicates whether the simulator is in visible or invisible mode.
+    private boolean isVisible;
 
-    // Indica si la ultima operacion que se hizo se pudo realizar bien.
-    private boolean operacionExitosa;
+    // Indicates whether the last operation performed was successful.
+    private boolean successfulOperation;
 
-    // Se usa para girar las ruedas una cantidad de pasos al azar.
-    private Random azar;
+    // Used to rotate wheels a random number of steps.
+    private Random random;
 
-    // Estas constantes son solo para calcular donde dibujar cada rueda
-    // en la pantalla (no tienen relacion con la logica del negocio).
-    private static final int ESPACIO_ENTRE_RUEDAS = 60;
-    private static final int POSICION_X_INICIAL = 40;
-    private static final int POSICION_Y_INICIAL = 40;
+    // These constants are only used to compute where to draw each
+    // wheel on screen (they have no relation to business logic).
+    private static final int SPACE_BETWEEN_WHEELS = 60;
+    private static final int INITIAL_X_POSITION = 40;
+    private static final int INITIAL_Y_POSITION = 40;
 
-    // Colores que el Canvas de shapes sabe pintar. Con cualquier otro
-    // nombre CSS el canvas dibuja negro sin avisar.
-    private static final String[] COLORES_VALIDOS = {"red", "black", "blue", 
+    // Colors the shapes Canvas knows how to paint. Any other CSS
+    // name makes the canvas draw black without warning.
+    private static final String[] VALID_COLORS = {"red", "black", "blue",
         "yellow", "green", "magenta", "white"};
-    
-    // Cuerpo de la maquina. Se dibuja detras de las ruedas y cambia de
-    // color cuando la maquina llega a una configuracion ganadora.
-    private Rectangle cuerpo;
-    
-    private static final int MARGEN = 15;
+
+    // Body of the machine. It is drawn behind the wheels and changes
+    // color when the machine reaches a winning configuration.
+    private Rectangle body;
+
+    private static final int MARGIN = 15;
 
     /**
-     * Constructor. Crea una maquina sin ruedas, sin simbolos y en modo
-     * invisible, como lo pide el enunciado.
+     * Constructor. Creates a machine with no wheels, no symbols and
+     * in invisible mode, as required by the assignment.
      */
     public SlotMachine() {
-        simbolos = new ArrayList<Symbol>();
-        ruedas = new ArrayList<Wheel>();
-        estaVisible = false;
-        
-        cuerpo = new Rectangle();
-        cuerpo.moveHorizontal(POSICION_X_INICIAL - MARGEN - 70);
-        cuerpo.moveVertical(POSICION_Y_INICIAL - MARGEN - 15);
-        cuerpo.changeColor("black");
-        
-        operacionExitosa = true;
-        azar = new Random();
+        symbols = new ArrayList<Symbol>();
+        wheels = new ArrayList<Wheel>();
+        isVisible = false;
+
+        body = new Rectangle();
+        body.moveHorizontal(INITIAL_X_POSITION - MARGIN - 70);
+        body.moveVertical(INITIAL_Y_POSITION - MARGIN - 15);
+        body.changeColor("black");
+
+        successfulOperation = true;
+        random = new Random();
     }
 
     /**
-     * Agrega una rueda nueva en la posicion indicada. La rueda nace
-     * mostrando el primer simbolo de la secuencia de la maquina.
-     * Si la posicion queda fuera de rango se ajusta al extremo mas
-     * cercano permitido.
+     * Adds a new wheel at the indicated position. The wheel is born
+     * showing the first symbol of the machine's sequence. If the
+     * position is out of range it is adjusted to the nearest allowed
+     * end.
      *
-     * @param pos posicion donde se quiere agregar la rueda (empieza en 1).
+     * @param pos position where the wheel should be added (starts at 1).
      */
     public void addWheel(int pos) {
-        int indice = ajustarPosicion(pos, ruedas.size() + 1);
+        int index = adjustPosition(pos, wheels.size() + 1);
 
-        int x = POSICION_X_INICIAL + indice * ESPACIO_ENTRE_RUEDAS;
-        Wheel ruedaNueva = new Wheel(simbolos, x, POSICION_Y_INICIAL);
-        ruedas.add(indice, ruedaNueva);
+        int x = INITIAL_X_POSITION + index * SPACE_BETWEEN_WHEELS;
+        Wheel newWheel = new Wheel(symbols, x, INITIAL_Y_POSITION);
+        wheels.add(index, newWheel);
 
-        if (estaVisible) {
-            ruedaNueva.makeVisible();
+        if (isVisible) {
+            newWheel.makeVisible();
         }
-        reubicarRuedas();
-        actualizarEstadoGanador();
-        operacionExitosa = true;
+        repositionWheels();
+        updateWinningState();
+        successfulOperation = true;
     }
-    
+
     /**
-     * Elimina la rueda que esta en la posicion indicada.
-     * @param pos posicion de la rueda a eliminar (empieza en 1).
+     * Removes the wheel at the indicated position.
+     * @param pos position of the wheel to remove (starts at 1).
      */
     public void delWheel(int pos) {
-        if (ruedas.isEmpty()) {
-            fallar("No hay ruedas para eliminar.");
+        if (wheels.isEmpty()) {
+            fail("There are no wheels to remove.");
             return;
         }
-        int indice = ajustarPosicion(pos, ruedas.size());
+        int index = adjustPosition(pos, wheels.size());
 
-        ruedas.get(indice).makeInvisible();
-        ruedas.remove(indice);
-        
-        reubicarRuedas();
-        actualizarEstadoGanador();
-        operacionExitosa = true;
+        wheels.get(index).makeInvisible();
+        wheels.remove(index);
+
+        repositionWheels();
+        updateWinningState();
+        successfulOperation = true;
     }
-    
+
     /**
-     * Bloquea la rueda.
-     * @param wheel posicion de la rueda a bloquear (empieza en 1).
+     * Locks a wheel.
+     * @param wheel position of the wheel to lock (starts at 1).
      */
-    public void lock(int wheel){
-        if(ruedas.isEmpty()){
-            fallar("No se puede ejecutar la accion de bloquear una rueda cuando no hay ruedas");
+    public void lock(int wheel) {
+        if (wheels.isEmpty()) {
+            fail("Cannot lock a wheel when there are no wheels.");
             return;
         }
-        int indice = ajustarPosicion(wheel, ruedas.size()); 
-        ruedas.get(indice).bloquearRueda();
-        operacionExitosa = true;
-        
+        int index = adjustPosition(wheel, wheels.size());
+        wheels.get(index).lockWheel();
+        successfulOperation = true;
     }
-    
+
     /**
-     * Desbloquea la rueda.
-     * @param wheel posicion de la rueda a desbloquear (empieza en 1).
+     * Unlocks a wheel.
+     * @param wheel position of the wheel to unlock (starts at 1).
      */
-    public void unlock(int wheel){
-        if(ruedas.isEmpty()){
-            fallar("No se puede ejecutar la accion de desbloquear una rueda cuando no hay ruedas");
+    public void unlock(int wheel) {
+        if (wheels.isEmpty()) {
+            fail("Cannot unlock a wheel when there are no wheels.");
             return;
         }
-        int indice = ajustarPosicion(wheel, ruedas.size()); 
-        ruedas.get(indice).desbloquearRueda();
-        operacionExitosa = true;
+        int index = adjustPosition(wheel, wheels.size());
+        wheels.get(index).unlockWheel();
+        successfulOperation = true;
     }
-    
+
     /**
-     * Gira una rueda especifica la cantidad de pasos indicada.
-     * Si la rueda esta bloqueada la operacion falla.
+     * Rotates a specific wheel the indicated number of steps.
+     * If the wheel is locked, the operation fails.
      *
-     * @param wheel posicion de la rueda a girar (empieza en 1).
-     * @param steps cuantos pasos gira la rueda; los negativos giran al reves.
+     * @param wheel position of the wheel to rotate (starts at 1).
+     * @param steps how many steps the wheel rotates; negative values rotate backwards.
      */
     public void spin(int wheel, int steps) {
-        if (ruedas.isEmpty()) {
-            fallar("No hay ruedas para girar.");
+        if (wheels.isEmpty()) {
+            fail("There are no wheels to spin.");
             return;
         }
-        if (simbolos.isEmpty()) {
-            fallar("La maquina no tiene simbolos configurados.");
+        if (symbols.isEmpty()) {
+            fail("The machine has no symbols configured.");
             return;
         }
-        int indice = ajustarPosicion(wheel, ruedas.size());
+        int index = adjustPosition(wheel, wheels.size());
 
-        if (ruedas.get(indice).informarEstadoRueda()) {
-            fallar("La rueda esta bloqueada y no se puede girar.");
+        if (wheels.get(index).isLocked()) {
+            fail("The wheel is locked and cannot be spun.");
             return;
         }
 
-        int direccion = steps >= 0 ? 1 : -1;
-        int cantidadPasos = Math.abs(steps);
-        for (int i = 0; i < cantidadPasos; i++) {
-            ruedas.get(indice).rotate(direccion);
-        if (estaVisible) {
-            Canvas.getCanvas().wait(150);
+        int direction = steps >= 0 ? 1 : -1;
+        int stepCount = Math.abs(steps);
+        for (int i = 0; i < stepCount; i++) {
+            wheels.get(index).rotate(direction);
+            if (isVisible) {
+                Canvas.getCanvas().wait(150);
             }
         }
 
-        actualizarEstadoGanador();
-        operacionExitosa = true;
+        updateWinningState();
+        successfulOperation = true;
     }
-    
+
     /**
-     * Deja la maquina en la configuracion indicada: cada rueda muestra
-     * el color que le corresponde en el arreglo.
-     * La operacion es atomica: si algo no cuadra no se cambia nada.
+     * Leaves the machine in the indicated configuration: each wheel
+     * shows the color that corresponds to it in the array.
+     * The operation is atomic: if something does not add up, nothing
+     * is changed.
      *
-     * @param setSymbols colores que debe mostrar cada rueda, de izquierda a derecha.
+     * @param setSymbols colors that each wheel should show, from left to right.
      */
     public void spin(String[] setSymbols) {
         if (setSymbols == null) {
-            fallar("No se recibio una configuracion.");
+            fail("No configuration was received.");
             return;
         }
-        if (setSymbols.length != ruedas.size()) {
-            fallar("La configuracion no tiene un color por cada rueda.");
+        if (setSymbols.length != wheels.size()) {
+            fail("The configuration does not have one color per wheel.");
             return;
         }
         for (int i = 0; i < setSymbols.length; i++) {
-            if (buscarSimbolo(setSymbols[i]) < 0) {
-                fallar("La maquina no tiene un simbolo de color " + setSymbols[i] + ".");
+            if (findSymbol(setSymbols[i]) < 0) {
+                fail("The machine has no symbol of color " + setSymbols[i] + ".");
                 return;
             }
-            if (ruedas.get(i).informarEstadoRueda()
-                    && !setSymbols[i].equals(ruedas.get(i).showingColor())) {
-                fallar("Una rueda bloqueada tendria que cambiar de simbolo.");
+            if (wheels.get(i).isLocked()
+                    && !setSymbols[i].equals(wheels.get(i).showingColor())) {
+                fail("A locked wheel would have to change its symbol.");
                 return;
             }
         }
 
-        for (int i = 0; i < ruedas.size(); i++) {
-            ruedas.get(i).place(setSymbols[i]);
+        for (int i = 0; i < wheels.size(); i++) {
+            wheels.get(i).place(setSymbols[i]);
         }
 
-        actualizarEstadoGanador();
-        operacionExitosa = true;
+        updateWinningState();
+        successfulOperation = true;
     }
-    
+
     /**
-     * Swap basicamente primero compara si hay dos o mas ruedas si hay menos de una rueda falla si las posiciones son iguales o se intenta
-     * intercambiar la misma rueda es no hacer nada falla, no pasan numeros negativos y intercambia las posiciones usando una variable 
-     * temporal.
-     * 
-     * @param wheel1 rueda ingresada primero por el usuario la posicion empieza en 1, si se sale del rango ajusta al extremo mas cercano.
-     * @param wheel2 rueda ingresada de segundo por el usuario si se sale del rango ajusta al extremo mas cercano.
-     * 
-     */
-    
-    public void swap(int wheel1, int wheel2){
-        if(ruedas.size() <= 1){
-            fallar("Se necesitan como minimo dos ruedas para hacer un intercambio obvio");
-            return;
-        }
-        int posicion1 = ajustarPosicion(wheel1,ruedas.size());
-        int posicion2 = ajustarPosicion(wheel2,ruedas.size());
-        if (posicion1 == posicion2) {
-            fallar("No se pueden intercambiar dos ruedas que están en la misma posición.");
-            return;
-        }
-        Wheel tempvariabl = ruedas.get(posicion1);
-        
-        ruedas.set(posicion1,ruedas.get(posicion2));
-        ruedas.set(posicion2,tempvariabl);
-        
-        reubicarRuedas();
-        actualizarEstadoGanador();
-        operacionExitosa = true;
-    }
-    
-    /**
-     * Agrega un simbolo del color indicado a la secuencia de la
-     * maquina, en la posicion pedida. El simbolo queda disponible
-     * para todas las ruedas.
+     * Swap first checks whether there are two or more wheels; if
+     * there is less than one wheel it fails; if the positions are
+     * equal, or the same wheel is being swapped with itself, it does
+     * nothing and fails; negative numbers are not allowed; and it
+     * swaps the positions using a temporary variable.
      *
-     * @param pos   posicion donde se quiere el simbolo (empieza en 1).
-     * @param color color CSS del simbolo, por ejemplo "red" o "blue".
+     * @param wheel1 first wheel entered by the user, position starts at 1; if out of range it is adjusted to the nearest end.
+     * @param wheel2 second wheel entered by the user; if out of range it is adjusted to the nearest end.
+     */
+    public void swap(int wheel1, int wheel2) {
+        if (wheels.size() <= 1) {
+            fail("At least two wheels are needed to perform a swap.");
+            return;
+        }
+        int position1 = adjustPosition(wheel1, wheels.size());
+        int position2 = adjustPosition(wheel2, wheels.size());
+        if (position1 == position2) {
+            fail("Cannot swap two wheels that are in the same position.");
+            return;
+        }
+        Wheel temp = wheels.get(position1);
+
+        wheels.set(position1, wheels.get(position2));
+        wheels.set(position2, temp);
+
+        repositionWheels();
+        updateWinningState();
+        successfulOperation = true;
+    }
+
+    /**
+     * Adds a symbol of the indicated color to the machine's sequence,
+     * at the requested position. The symbol becomes available to all
+     * wheels.
+     *
+     * @param pos   position where the symbol is wanted (starts at 1).
+     * @param color CSS color of the symbol, for example "red" or "blue".
      */
     public void addSymbol(int pos, String color) {
-        if (!colorSoportado(color)) {
-            fallar("El color " + color + " no se puede dibujar.");
+        if (!isColorSupported(color)) {
+            fail("The color " + color + " cannot be drawn.");
             return;
         }
-        if (buscarSimbolo(color) >= 0) {
-            fallar("Ya existe un simbolo de ese color.");
+        if (findSymbol(color) >= 0) {
+            fail("A symbol of that color already exists.");
             return;
         }
 
-        int indice = ajustarPosicion(pos, simbolos.size() + 1);
-        simbolos.add(indice, new Symbol(color));
-        avisarALasRuedas();
-        
-        actualizarEstadoGanador();
-        operacionExitosa = true;
+        int index = adjustPosition(pos, symbols.size() + 1);
+        symbols.add(index, new Symbol(color));
+        notifyWheels();
+
+        updateWinningState();
+        successfulOperation = true;
     }
 
     /**
-     * Elimina de la secuencia de la maquina el simbolo que tenga el
-     * color indicado.
+     * Removes from the machine's sequence the symbol with the
+     * indicated color.
      *
-     * @param symbol color del simbolo a eliminar.
+     * @param symbol color of the symbol to remove.
      */
     public void delSymbol(String symbol) {
-        int indice = buscarSimbolo(symbol);
-        if (indice < 0) {
-            fallar("No existe un simbolo de ese color.");
+        int index = findSymbol(symbol);
+        if (index < 0) {
+            fail("There is no symbol of that color.");
             return;
         }
 
-        simbolos.remove(indice);
-        avisarALasRuedas();
-        
-        actualizarEstadoGanador();
-        operacionExitosa = true;
+        symbols.remove(index);
+        notifyWheels();
+
+        updateWinningState();
+        successfulOperation = true;
     }
 
     /**
-     * Deja fijo, en la rueda indicada, el simbolo del color indicado
-     * como el simbolo que se esta mostrando.
-     * Si la rueda esta bloqueada la operacion falla.
+     * Fixes, on the indicated wheel, the symbol of the indicated
+     * color as the symbol being shown.
+     * If the wheel is locked, the operation fails.
      *
-     * @param wheel  posicion de la rueda (empieza en 1).
-     * @param symbol color del simbolo que se quiere mostrar.
+     * @param wheel  position of the wheel (starts at 1).
+     * @param symbol color of the symbol to be shown.
      */
     public void placeSymbol(int wheel, String symbol) {
-        if (ruedas.isEmpty()) {
-            fallar("No hay ruedas configuradas.");
+        if (wheels.isEmpty()) {
+            fail("There are no wheels configured.");
             return;
         }
-        int indice = ajustarPosicion(wheel, ruedas.size());
+        int index = adjustPosition(wheel, wheels.size());
 
-        if (ruedas.get(indice).informarEstadoRueda()) {
-            fallar("La rueda esta bloqueada y no se puede cambiar su simbolo.");
-            return;
-        }
-
-        if (!ruedas.get(indice).place(symbol)) {
-            fallar("La maquina no tiene un simbolo de ese color.");
+        if (wheels.get(index).isLocked()) {
+            fail("The wheel is locked and its symbol cannot be changed.");
             return;
         }
 
-        actualizarEstadoGanador();
-        operacionExitosa = true;
+        if (!wheels.get(index).place(symbol)) {
+            fail("The machine has no symbol of that color.");
+            return;
+        }
+
+        updateWinningState();
+        successfulOperation = true;
     }
 
     /**
-     * Gira una sola rueda de la maquina una cantidad de pasos al azar.
-     * Si la rueda esta bloqueada la operacion falla.
+     * Rotates a single wheel of the machine a random number of steps.
+     * If the wheel is locked, the operation fails.
      *
-     * @param wheel posicion de la rueda a girar (empieza en 1).
+     * @param wheel position of the wheel to rotate (starts at 1).
      */
     public void spin(int wheel) {
-        if (ruedas.isEmpty()) {
-            fallar("No hay ruedas para girar.");
+        if (wheels.isEmpty()) {
+            fail("There are no wheels to spin.");
             return;
         }
-        if (simbolos.isEmpty()) {
-            fallar("La maquina no tiene simbolos configurados.");
+        if (symbols.isEmpty()) {
+            fail("The machine has no symbols configured.");
             return;
         }
-        int indice = ajustarPosicion(wheel, ruedas.size());
+        int index = adjustPosition(wheel, wheels.size());
 
-        if (ruedas.get(indice).informarEstadoRueda()) {
-            fallar("La rueda esta bloqueada y no se puede girar.");
+        if (wheels.get(index).isLocked()) {
+            fail("The wheel is locked and cannot be spun.");
             return;
         }
 
-        ruedas.get(indice).rotate(azar.nextInt(simbolos.size()));
+        wheels.get(index).rotate(random.nextInt(symbols.size()));
 
-        actualizarEstadoGanador();
-        operacionExitosa = true;
+        updateWinningState();
+        successfulOperation = true;
     }
 
     /**
-     * Gira todas las ruedas de la maquina, una por una.
-     * Las ruedas bloqueadas se saltan y la operacion sigue siendo exitosa.
+     * Rotates all the wheels of the machine, one by one.
+     * Locked wheels are skipped and the operation still succeeds.
      */
     public void spin() {
-        if (ruedas.isEmpty()) {
-            fallar("No hay ruedas para girar.");
+        if (wheels.isEmpty()) {
+            fail("There are no wheels to spin.");
             return;
         }
-        if (simbolos.isEmpty()) {
-            fallar("La maquina no tiene simbolos configurados.");
+        if (symbols.isEmpty()) {
+            fail("The machine has no symbols configured.");
             return;
         }
 
-        for (int i = 0; i < ruedas.size(); i++) {
-            if (ruedas.get(i).informarEstadoRueda()) {
+        for (int i = 0; i < wheels.size(); i++) {
+            if (wheels.get(i).isLocked()) {
                 continue;
             }
-            ruedas.get(i).rotate(azar.nextInt(simbolos.size()));
+            wheels.get(i).rotate(random.nextInt(symbols.size()));
         }
 
-        actualizarEstadoGanador();
-        operacionExitosa = true;
+        updateWinningState();
+        successfulOperation = true;
     }
 
     /**
-     * @return los colores de los simbolos de la maquina, en el mismo
-     * orden en que estan en la secuencia (empezando en la posicion 1).
+     * @return the colors of the machine's symbols, in the same order
+     * they are in the sequence (starting at position 1).
      */
     public String[] symbols() {
-        String[] colores = new String[simbolos.size()];
-        for (int i = 0; i < simbolos.size(); i++) {
-            colores[i] = simbolos.get(i).getColor();
+        String[] colors = new String[symbols.size()];
+        for (int i = 0; i < symbols.size(); i++) {
+            colors[i] = symbols.get(i).getColor();
         }
-        operacionExitosa = true;
-        return colores;
+        successfulOperation = true;
+        return colors;
     }
 
     /**
-     * @return la cantidad de colores distintos que se estan viendo en
-     * las ruedas en este momento. Es la k del problema original: si
-     * vale 1, todas las ruedas muestran lo mismo.
+     * @return the number of distinct colors currently being shown on
+     * the wheels. It is the k from the original problem: if it is 1,
+     * all the wheels are showing the same thing.
      */
     public int distinctSymbols() {
-        String[] visibles = configuration();
-        ArrayList<String> vistos = new ArrayList<String>();
-        for (int i = 0; i < visibles.length; i++) {
-            if (visibles[i] != null && !vistos.contains(visibles[i])) {
-                vistos.add(visibles[i]);
+        String[] visible = configuration();
+        ArrayList<String> seen = new ArrayList<String>();
+        for (int i = 0; i < visible.length; i++) {
+            if (visible[i] != null && !seen.contains(visible[i])) {
+                seen.add(visible[i]);
             }
         }
-        operacionExitosa = true;
-        return vistos.size();
+        successfulOperation = true;
+        return seen.size();
     }
 
     /**
-     * @return el color que esta mostrando cada rueda en este momento,
-     * ordenados de izquierda a derecha.
+     * @return the color each wheel is currently showing, ordered
+     * from left to right.
      */
     public String[] configuration() {
-        String[] coloresVisibles = new String[ruedas.size()];
-        for (int i = 0; i < ruedas.size(); i++) {
-            coloresVisibles[i] = ruedas.get(i).showingColor();
+        String[] visibleColors = new String[wheels.size()];
+        for (int i = 0; i < wheels.size(); i++) {
+            visibleColors[i] = wheels.get(i).showingColor();
         }
-        operacionExitosa = true;
-        return coloresVisibles;
+        successfulOperation = true;
+        return visibleColors;
     }
 
     /**
-     * @return true si la maquina esta en configuracion ganadora, es
-     * decir, si todas las ruedas muestran el mismo simbolo.
+     * @return true if the machine is in a winning configuration, that
+     * is, if all the wheels show the same symbol.
      */
     public boolean isJackpot() {
-        return !ruedas.isEmpty() && distinctSymbols() == 1;
+        return !wheels.isEmpty() && distinctSymbols() == 1;
     }
 
     /**
-     * Hace visible todo el simulador.
+     * Makes the whole simulator visible.
      */
     public void makeVisible() {
-        estaVisible = true;
-        cuerpo.makeVisible();
-        for (int i = 0; i < ruedas.size(); i++) {
-            ruedas.get(i).makeVisible();
+        isVisible = true;
+        body.makeVisible();
+        for (int i = 0; i < wheels.size(); i++) {
+            wheels.get(i).makeVisible();
         }
-        operacionExitosa = true;
+        successfulOperation = true;
     }
 
     /**
-     * Hace invisible todo el simulador.
+     * Makes the whole simulator invisible.
      */
     public void makeInvisible() {
-        estaVisible = false;
-        for (int i = 0; i < ruedas.size(); i++) {
-            ruedas.get(i).makeInvisible();
+        isVisible = false;
+        for (int i = 0; i < wheels.size(); i++) {
+            wheels.get(i).makeInvisible();
         }
-        cuerpo.makeInvisible();
-        operacionExitosa = true;
+        body.makeInvisible();
+        successfulOperation = true;
     }
 
     /**
-     * Termina el simulador. Por ahora simplemente oculta todo.
+     * Ends the simulator. For now it simply hides everything.
      */
     public void exit() {
         makeInvisible();
-        operacionExitosa = true;
+        successfulOperation = true;
     }
 
     /**
-     * @return true si la ultima operacion que se invoco se pudo
-     * realizar correctamente, false si no.
+     * @return true if the last operation invoked could be performed
+     * correctly, false otherwise.
      */
     public boolean ok() {
-        return operacionExitosa;
+        return successfulOperation;
     }
 
     /**
-     * Ajusta una posicion dada por el usuario para que quede dentro
-     * del rango permitido, y la convierte al indice de la lista.
-     * El enunciado pide que si el valor se sale, se use el extremo
-     * mas cercano en vez de rechazar la operacion.
+     * Adjusts a position given by the user so that it falls within
+     * the allowed range, and converts it to the list index.
+     * The assignment requires that if the value is out of range, the
+     * nearest end is used instead of rejecting the operation.
      *
-     * @param pos    posicion pedida por el usuario (empieza en 1).
-     * @param maximo posicion mas grande que se acepta.
-     * @return el indice equivalente en la lista (empieza en 0).
+     * @param pos     position requested by the user (starts at 1).
+     * @param maximum largest position that is accepted.
+     * @return the equivalent index in the list (starts at 0).
      */
-    private int ajustarPosicion(int pos, int maximo) {
-        int posicionValida = pos;
-        if (posicionValida < 1) {
-            posicionValida = 1;
+    private int adjustPosition(int pos, int maximum) {
+        int validPosition = pos;
+        if (validPosition < 1) {
+            validPosition = 1;
         }
-        if (posicionValida > maximo) {
-            posicionValida = maximo;
+        if (validPosition > maximum) {
+            validPosition = maximum;
         }
-        return posicionValida - 1;
+        return validPosition - 1;
     }
 
     /**
-     * Busca en la secuencia el simbolo que tenga el color indicado.
+     * Looks up, in the sequence, the symbol with the indicated color.
      *
-     * @param color color que se esta buscando.
-     * @return la posicion del simbolo en la lista, o -1 si no existe.
+     * @param color color being searched for.
+     * @return the position of the symbol in the list, or -1 if it does not exist.
      */
-    private int buscarSimbolo(String color) {
-        for (int i = 0; i < simbolos.size(); i++) {
-            if (simbolos.get(i).getColor().equals(color)) {
+    private int findSymbol(String color) {
+        for (int i = 0; i < symbols.size(); i++) {
+            if (symbols.get(i).getColor().equals(color)) {
                 return i;
             }
         }
         return -1;
     }
-    
+
     /**
-     * @param color nombre de color que se quiere verificar.
-     * @return true si el canvas sabe dibujar ese color.
+     * @param color color name to be checked.
+     * @return true if the canvas knows how to draw that color.
      */
-    private boolean colorSoportado(String color) {
-        for (int i = 0; i < COLORES_VALIDOS.length; i++) {
-            if (COLORES_VALIDOS[i].equals(color)) {
+    private boolean isColorSupported(String color) {
+        for (int i = 0; i < VALID_COLORS.length; i++) {
+            if (VALID_COLORS[i].equals(color)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     /**
-     * Le avisa a todas las ruedas que la secuencia de simbolos cambio,
-     * para que ajusten lo que estan mostrando.
+     * Notifies all wheels that the symbol sequence changed, so they
+     * can adjust what they are showing.
      */
-    private void avisarALasRuedas() {
-        for (int i = 0; i < ruedas.size(); i++) {
-            ruedas.get(i).refresh();
+    private void notifyWheels() {
+        for (int i = 0; i < wheels.size(); i++) {
+            wheels.get(i).refresh();
         }
     }
-    
-        /**
-     * Vuelve a dibujar las ruedas para que queden por encima del cuerpo.
-     * El canvas de shapes pinta las figuras en el orden en que se
-     * dibujaron por ultima vez, asi que cada vez que el cuerpo cambia
-     * de color o de tamano queda al frente y hay que subir las ruedas.
+
+    /**
+     * Redraws the wheels so they stay on top of the body. The shapes
+     * canvas paints shapes in the order they were last drawn, so
+     * every time the body changes color or size it ends up on top and
+     * the wheels need to be brought forward again.
      */
-    private void traerRuedasAlFrente() {
-        if (!estaVisible) {
+    private void bringWheelsToFront() {
+        if (!isVisible) {
             return;
         }
-        for (int i = 0; i < ruedas.size(); i++) {
-            ruedas.get(i).makeVisible();
+        for (int i = 0; i < wheels.size(); i++) {
+            wheels.get(i).makeVisible();
         }
     }
-    
+
     /**
-     * Vuelve a poner cada rueda en su lugar de izquierda a derecha y
-     * ajusta el tamano del cuerpo. Se llama cada vez que cambia el
-     * numero de ruedas, para que no queden huecos.
+     * Puts each wheel back in its place from left to right and
+     * adjusts the body's size. It is called every time the number of
+     * wheels changes, so that no gaps are left.
      */
-    private void reubicarRuedas() {
-        for (int i = 0; i < ruedas.size(); i++) {
-            ruedas.get(i).moveTo(POSICION_X_INICIAL + i * ESPACIO_ENTRE_RUEDAS,
-                                 POSICION_Y_INICIAL);
+    private void repositionWheels() {
+        for (int i = 0; i < wheels.size(); i++) {
+            wheels.get(i).moveTo(INITIAL_X_POSITION + i * SPACE_BETWEEN_WHEELS,
+                                 INITIAL_Y_POSITION);
         }
-        cuerpo.changeSize(30 + 2 * MARGEN, ruedas.size() * ESPACIO_ENTRE_RUEDAS + 10);
-        traerRuedasAlFrente();
+        body.changeSize(30 + 2 * MARGIN, wheels.size() * SPACE_BETWEEN_WHEELS + 10);
+        bringWheelsToFront();
     }
-    
-    
+
+
     /**
-     * Requisito de usabilidad: la maquina debe lucir diferente cuando
-     * llega al estado ganador. El cuerpo se pone amarillo.
+     * Usability requirement: the machine must look different when it
+     * reaches the winning state. The body turns yellow.
      */
-    private void actualizarEstadoGanador() {
+    private void updateWinningState() {
         if (isJackpot()) {
-            cuerpo.changeColor("yellow");
+            body.changeColor("yellow");
         } else {
-            cuerpo.changeColor("black");
+            body.changeColor("black");
         }
-        traerRuedasAlFrente();
+        bringWheelsToFront();
     }
-    
+
     /**
-     * Marca la ultima operacion como fallida y le avisa al usuario,
-     * pero SOLO si el simulador esta visible. Si esta invisible, la
-     * operacion falla en silencio (requisito de usabilidad numero 4).
+     * Marks the last operation as failed and warns the user, but ONLY
+     * if the simulator is visible. If it is invisible, the operation
+     * fails silently (usability requirement number 4).
      *
-     * @param mensaje texto que se le quiere mostrar al usuario.
+     * @param message text to be shown to the user.
      */
-    private void fallar(String mensaje) {
-        operacionExitosa = false;
-        if (estaVisible) {
-            JOptionPane.showMessageDialog(null, mensaje,
+    private void fail(String message) {
+        successfulOperation = false;
+        if (isVisible) {
+            JOptionPane.showMessageDialog(null, message,
                     "Slot Machine", JOptionPane.WARNING_MESSAGE);
         }
     }
