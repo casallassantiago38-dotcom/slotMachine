@@ -1,0 +1,14 @@
+#BlueJ class context
+#Sun Sep 20 07:50:18 COT 2026
+comment0.target=SymbolTest
+comment0.text=\n Unit tests for every method of Symbol. The symbols are invisible.\n\n @author Jhazael and Santiago\n @version 1.0 (Cycle 3 - 2026-2)\n
+comment1.target=void setUp()
+comment2.target=void testConstructorShouldKeepTheColor()
+comment3.target=void testGetColorShouldReturnTheCurrentColor()
+comment4.target=void testChangeColorShouldUpdateTheColorOfTheSymbol()
+comment5.target=void testPlaceAtShouldNotChangeTheColor()
+comment6.target=void testMoveHorizontalShouldNotChangeTheColor()
+comment7.target=void testMoveVerticalShouldNotChangeTheColor()
+comment8.target=void testMakeVisibleShouldNotChangeTheColor()
+comment9.target=void testMakeInvisibleShouldNotChangeTheColor()
+numComments=10

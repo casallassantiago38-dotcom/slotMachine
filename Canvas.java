@@ -26,7 +26,7 @@ public class Canvas{
 	 */
 	public static Canvas getCanvas(){
 		if(canvasSingleton == null) {
-			canvasSingleton = new Canvas("BlueJ Shapes Demo", 300, 300, 
+			canvasSingleton = new Canvas("BlueJ Shapes Demo", 900, 300, 
 										 Color.white);
 		}
 		canvasSingleton.setVisible(true);
@@ -129,7 +129,8 @@ public class Canvas{
 		else if(colorString.equals("white"))
 			graphic.setColor(Color.white);
 		else
-			graphic.setColor(Color.black);
+			// Cycle 3: the rest of the CSS colors are known by Palette
+			graphic.setColor(Palette.toColor(colorString));
     }
 
     /**

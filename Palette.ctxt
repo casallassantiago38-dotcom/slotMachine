@@ -1,0 +1,19 @@
+#BlueJ class context
+#Sun Sep 20 22:11:42 COT 2026
+comment0.target=Palette
+comment0.text=\r\n Catalog of the CSS color names the simulator accepts as symbols.\r\n\r\n The Canvas of the shapes package only knows seven color names. A\r\n machine with n wheels needs n DIFFERENT symbols (n can be up to 50\r\n in the marathon problem), so this class keeps a list of 50 CSS\r\n colors together with their RGB value. The Canvas asks this class\r\n for the color it does not know how to paint by itself.\r\n\r\n @author Jhazael and Santiago\r\n @version 1.0 (Cycle 3 - 2026-2)\r\n
+comment1.target=int size()
+comment1.text=\r\n @return how many different colors the palette has.\r\n
+comment2.params=index
+comment2.target=java.lang.String colorAt(int)
+comment2.text=\r\n @param index position of the color in the palette (starts at 0).\r\n @return the name of the color at that position, or null if the\r\n index is outside the palette.\r\n
+comment3.params=name
+comment3.target=boolean isValid(java.lang.String)
+comment3.text=\r\n @param name CSS color name to look for.\r\n @return true if the palette contains a color with that name.\r\n
+comment4.params=name
+comment4.target=java.awt.Color toColor(java.lang.String)
+comment4.text=\r\n Translates a color name into a java.awt.Color so the Canvas can\r\n paint it. Unknown names are painted black, which is what the\r\n Canvas did before.\r\n\r\n @param name CSS color name.\r\n @return the matching Color, or black if the name is unknown.\r\n
+comment5.params=name
+comment5.target=int indexOf(java.lang.String)
+comment5.text=\r\n Looks up a name in the list.\r\n\r\n @param name color name searched.\r\n @return its position in the list, or -1 if it is not there.\r\n
+numComments=6

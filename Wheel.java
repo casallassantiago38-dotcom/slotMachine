@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * at once.
  *
  * @author Jhazael and Santiago
- * @version 1.1 (Cycle 2 - 2026-2)
+ * @version 1.2 (Cycle 3 - 2026-2)
  */
 public class Wheel {
 
@@ -26,8 +26,15 @@ public class Wheel {
     // Position, within the sequence, of the symbol being shown.
     private int shownIndex;
 
+    // Color of the symbol being shown. It lets the wheel keep showing
+    // the same symbol when other symbols are added before it.
+    private String shownColor;
+
     // This wheel's own rectangle, the one seen on screen.
     private Symbol visibleSymbol;
+
+    // Height of the rectangle of every wheel (the same as Rectangle).
+    private static final int SYMBOL_HEIGHT = 30;
 
     // Where this wheel is drawn on the canvas.
     private int xPosition;
@@ -135,8 +142,22 @@ public class Wheel {
     public void refresh() {
         if (sequence.isEmpty()) {
             shownIndex = 0;
-        } else if (shownIndex >= sequence.size()) {
-            shownIndex = sequence.size() - 1;
+            shownColor = null;
+        } else {
+            // first try to find again the symbol that was being shown,
+            // because adding a symbol before it moves its position
+            int found = -1;
+            for (int i = 0; i < sequence.size(); i++) {
+                if (sequence.get(i).getColor().equals(shownColor)) {
+                    found = i;
+                }
+            }
+            if (found >= 0) {
+                shownIndex = found;
+            } else if (shownIndex >= sequence.size()) {
+                // the shown symbol was deleted and it was the last one
+                shownIndex = sequence.size() - 1;
+            }
         }
         updateVisibleSymbol();
     }
@@ -152,6 +173,17 @@ public class Wheel {
         xPosition = x;
         yPosition = y;
         visibleSymbol.placeAt(x, y);
+    }
+
+    /**
+     * Changes the width of the rectangle that represents this wheel. The
+     * machine uses it to make the wheels narrower when there are so
+     * many that they would not fit on the canvas.
+     *
+     * @param width new width in pixels.
+     */
+    public void resize(int width) {
+        visibleSymbol.changeSize(SYMBOL_HEIGHT, width);
     }
 
     /**
@@ -177,10 +209,12 @@ public class Wheel {
      */
     private void updateVisibleSymbol() {
         if (sequence.isEmpty()) {
+            shownColor = null;
             visibleSymbol.makeInvisible();
             return;
         }
-        visibleSymbol.changeColor(sequence.get(shownIndex).getColor());
+        shownColor = sequence.get(shownIndex).getColor();
+        visibleSymbol.changeColor(shownColor);
         if (isVisible) {
             visibleSymbol.makeVisible();
         } else {

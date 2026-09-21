@@ -1,0 +1,31 @@
+#BlueJ class context
+#Sun Sep 20 22:11:42 COT 2026
+comment0.target=SlotMachineContestTest
+comment0.text=\r\n Unit tests for SlotMachineContest (solve and simulate).\r\n The machines used by the tests are invisible. The only exception is\r\n the test of simulate, which by definition needs a visible machine\r\n (it is skipped when the computer has no screen).\r\n\r\n @author Jhazael and Santiago\r\n @version 1.0 (Cycle 3 - 2026-2)\r\n
+comment1.params=positions
+comment1.target=SlotMachine buildMachine(int[])
+comment1.text=\r\n Helper\: builds a machine of n wheels (n \= positions.length) and\r\n leaves wheel i showing the symbol number positions[i].\r\n
+comment10.target=void testSolveShouldWinEveryConfigurationOfFiveWheels()
+comment11.target=void testSolveShouldWinRandomMachinesOfManySizes()
+comment12.target=void testSolveShouldNotExceedTheLimitWithFiftyWheels()
+comment13.target=void testSolveShouldWinWhenWheelsShowOnlyTwoDifferentSymbols()
+comment14.target=void testSolveShouldReturnActionsThatWinWhenReplayed()
+comment15.target=void testSolveShouldStopAtTheFirstJackpot()
+comment16.target=void testSolveShouldReturnNoActionsWhenTheMachineIsAlreadyWon()
+comment17.target=void testSolveShouldOnlyNeedTheTwoMethodsOfTheTestingTool()
+comment18.target=void testSolveShouldUseShortRotations()
+comment19.target=void testSimulateShouldPlayTheSolutionOnAVisibleMachine()
+comment2.params=machine actions
+comment2.target=void applyActions(SlotMachine, int[][])
+comment2.text=\r\n Helper\: applies a list of actions to a machine with spin(wheel, steps).\r\n
+comment20.target=void testSimulateShouldDoNothingWhenNIsOutOfRange()
+comment3.params=n
+comment3.target=void checkAllConfigurations(int)
+comment3.text=\r\n Helper\: tries EVERY initial configuration of a machine of n wheels\r\n (except the ones that are already a jackpot) and checks that the\r\n solver wins each of them within the limit of actions.\r\n
+comment4.target=void testSolveWithThreeWheelsShouldReturnValidSteps()
+comment5.target=void testSolveShouldReturnNoActionsWhenNIsOutOfRange()
+comment6.target=void testSolveWithOneWheelShouldNeedNoActions()
+comment7.target=void testSolveShouldWinEveryConfigurationOfTwoWheels()
+comment8.target=void testSolveShouldWinEveryConfigurationOfThreeWheels()
+comment9.target=void testSolveShouldWinEveryConfigurationOfFourWheels()
+numComments=21

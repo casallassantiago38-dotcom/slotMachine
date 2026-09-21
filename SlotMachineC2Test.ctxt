@@ -1,5 +1,5 @@
 #BlueJ class context
-#Sun Sep 06 19:52:13 COT 2026
+#Sun Sep 20 22:11:42 COT 2026
 comment0.target=SlotMachineC2Test
 comment0.text=\r\n Unit tests for the Cycle 2 methods of SlotMachine.\r\n All tests run in invisible mode so no dialogs or graphics\r\n interrupt the run.\r\n\r\n @author Jhazael and Santiago\r\n @version 1.0 (Cycle 2 - 2026-2)\r\n
 comment1.target=void setUp()

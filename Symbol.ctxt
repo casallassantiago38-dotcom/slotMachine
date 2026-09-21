@@ -1,5 +1,5 @@
 #BlueJ class context
-#Sun Sep 06 19:31:16 COT 2026
+#Sun Sep 20 22:11:42 COT 2026
 comment0.target=Symbol
 comment0.text=\r\n This class represents a symbol of the slot machine.\r\n A symbol is identified by its color, and it is drawn on screen as\r\n a rectangle. That is why this class extends (inherits from)\r\n Rectangle\: a Symbol IS a special kind of Rectangle that also\r\n remembers its color and its position on screen.\r\n\r\n @author Jhazael and Santiago\r\n @version 1.1 (Cycle 1 - 2026-2)\r\n
 comment1.params=color

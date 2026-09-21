@@ -8,7 +8,7 @@ add wheels, the problem was inspired by "Sloth Machine" of the ICPC World finals
 this version does not solve the hole problem it provides the machine that future solver would
 operate.
 
-VERSION or DATE: 1.0 - Cicle 1, Agust 2026
+VERSION or DATE: 3.0 - Cycle 3, September 2026
 
 HOW TO START THIS PROJECT: Click an instance of the slotmachine class. The machines starts empty
 and invisible, we develop a typical session to make it easier for you.
@@ -35,3 +35,28 @@ to find out. When the simulator is visible, a failed operation also shows a dial
 went wrong. When it is invisible, failures are silent and ok() is the only way to detect them.
 
 The machine body turns yellow when the machine reaches a jackpot.
+
+
+CYCLE 3 (REFACTORING AND EXTENSION)
+
+New requirements:
+  13. new SlotMachine(n) creates a machine with n wheels and n different symbols, initialized randomly
+      (it never starts as a jackpot). n goes from 1 to 50.
+  14. SlotMachineContest.solve(n) solves the marathon problem. It returns the actions {i, j} (rotate
+      wheel i by j steps) that make all the wheels show the same symbol. The machine stays invisible.
+  15. SlotMachineContest.simulate(n) plays the same solution on a VISIBLE machine, step by step.
+      Every step takes a moment to draw, so use small values of n (3 to 6).
+
+Design decisions:
+  - TestingTool (new interface) has only spin(wheel, steps) and distinctSymbols(). SlotMachine implements it
+    and the solver only sees the machine through it, so the solver cannot use anything else of the machine.
+  - Palette (new class) has 50 CSS colors, because a machine of n wheels needs n different symbols.
+    Canvas asks Palette for the colors it does not know.
+
+Typical session:
+	int[][] actions = SlotMachineContest.solve(5);
+	SlotMachineContest.simulate(4);
+
+Tests: SlotMachineTest, WheelTest, SymbolTest, PaletteTest, SlotMachineContestTest, SlotMachineContestCTest
+(plus the tests of Cycle 2). They run with the machine invisible; only the tests that must draw something
+(makeVisible and simulate) need a screen and are skipped when there is none.

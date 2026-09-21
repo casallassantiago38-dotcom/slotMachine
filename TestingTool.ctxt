@@ -1,0 +1,10 @@
+#BlueJ class context
+#Sun Sep 20 07:50:18 COT 2026
+comment0.target=TestingTool
+comment0.text=\n The only two operations the marathon solver is allowed to use on a\n slot machine\: rotate one wheel and ask the friend how many different\n symbols she can see. This is the "testing tool" of the problem.\n\n SlotMachine implements this interface, so SlotMachineContest.solve\n can only see these two methods and can never (even by mistake) use\n the rest of the simulator to solve the problem. Any other object\n that offers these two operations can be solved as well.\n\n @author Jhazael and Santiago\n @version 1.0 (Cycle 3 - 2026-2)\n
+comment1.params=wheel steps
+comment1.target=void spin(int, int)
+comment1.text=\n Rotates a wheel a number of steps.\n\n @param wheel position of the wheel (starts at 1).\n @param steps how many symbols the wheel moves; negative values\n              rotate in the opposite direction.\n
+comment2.target=int distinctSymbols()
+comment2.text=\n @return how many different symbols are currently shown by the\n wheels (the number the friend tells us in the problem).\n
+numComments=3

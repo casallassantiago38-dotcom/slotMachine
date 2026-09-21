@@ -1,0 +1,13 @@
+#BlueJ class context
+#Sun Sep 20 22:11:42 COT 2026
+comment0.target=SlotMachineContestCTest
+comment0.text=\r\n Shared unit tests (published on the course wiki / exchanged between\r\n groups). They only use the public methods of the design\:\r\n SlotMachineContest.solve(n) and SlotMachineContest.simulate(n).\r\n All the machines used here are invisible, except the simulate case,\r\n which by definition needs a screen and is skipped when there is none.\r\n\r\n Note\: several other tests received from classmates (Grupos\r\n GomezB-CarreroC, CortazarJ-MartinezC and BustosL-GomezG) were checked\r\n against this design and discarded because they assume behaviour that\r\n contradicts the assignment\: that symbols().length is n*n instead of\r\n n, that all wheels can start showing the same color (the constructor\r\n must never start in a jackpot), that solve never proposes more than\r\n n actions, or that solve never returns a negative number of steps\r\n (TestingTool.spin explicitly allows negative steps). Only the two\r\n tests below (Grupo Ca\u00F1onA-PaezP) hold for this implementation.\r\n\r\n @author Jhazael and Santiago\r\n @version 2.0 (Cycle 3 - 2026-2)\r\n
+comment1.target=void accordingCjPmShouldSolveSmallMachineWithValidActions()
+comment1.text=\r\n For a small machine, every action must be a pair {wheel, steps}\r\n with the wheel between 1 and n, and the total must respect the\r\n limit of the marathon.\r\n
+comment2.target=void accordingCjPmShouldSolveTheBiggestMachineWithinTheLimit()
+comment2.text=\r\n The biggest machine of the marathon (50 wheels) must be solved\r\n with at most 10 000 actions.\r\n
+comment3.target=void accordingCaPpShouldReturnValidMovesStructure()
+comment3.text=\r\n Shared by Grupo Ca\u00F1onA-PaezP\: every move solve(n) proposes must\r\n be a valid {wheel, steps} pair (length 2).\r\n
+comment4.target=void accordingCaPpShouldRunSimulationWithoutErrors()
+comment4.text=\r\n Shared by Grupo Ca\u00F1onA-PaezP\: simulate(n) must run without\r\n throwing any error. It needs a screen, so it is skipped when the\r\n computer running the tests has none (same rule already used in\r\n SlotMachineContestTest).\r\n
+numComments=5

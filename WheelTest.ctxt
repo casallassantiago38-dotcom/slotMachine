@@ -1,0 +1,19 @@
+#BlueJ class context
+#Sun Sep 20 07:50:18 COT 2026
+comment0.target=WheelTest
+comment0.text=\n Unit tests for every method of Wheel. The wheels are invisible.\n\n @author Jhazael and Santiago\n @version 1.0 (Cycle 3 - 2026-2)\n
+comment1.target=void setUp()
+comment10.target=void testRefreshShouldFixTheIndexWhenTheSequenceGetsShorter()
+comment11.target=void testMoveToShouldNotChangeTheShownSymbol()
+comment12.target=void testMakeVisibleShouldNotChangeTheShownSymbol()
+comment13.target=void testMakeInvisibleShouldNotChangeTheShownSymbol()
+comment14.target=void testRefreshShouldKeepShowingTheSameSymbolWhenOneIsInsertedBefore()
+comment2.target=void testConstructorShouldStartShowingTheFirstSymbolUnlocked()
+comment3.target=void testLockWheelShouldMarkTheWheelAsLocked()
+comment4.target=void testUnlockWheelShouldMarkTheWheelAsUnlocked()
+comment5.target=void testIsLockedShouldBeFalseForANewWheel()
+comment6.target=void testRotateShouldMoveForwardBackwardsAndWrapAround()
+comment7.target=void testPlaceShouldShowTheSymbolWithThatColor()
+comment8.target=void testPlaceShouldReturnFalseWhenTheColorDoesNotExist()
+comment9.target=void testShowingColorShouldBeNullWhenThereAreNoSymbols()
+numComments=15

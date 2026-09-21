@@ -1,0 +1,9 @@
+#BlueJ class context
+#Sun Sep 20 22:11:42 COT 2026
+comment0.target=PaletteTest
+comment0.text=\r\n Unit tests for every method of Palette.\r\n\r\n @author Jhazael and Santiago\r\n @version 1.0 (Cycle 3 - 2026-2)\r\n
+comment1.target=void testSizeShouldBeEnoughForTheBiggestMachine()
+comment2.target=void testColorAtShouldReturnDifferentNamesAndNullOutsideTheRange()
+comment3.target=void testIsValidShouldAcceptKnownNamesOnly()
+comment4.target=void testToColorShouldGiveDifferentColorsAndBlackForUnknownNames()
+numComments=5

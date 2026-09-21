@@ -14,10 +14,14 @@ import javax.swing.JOptionPane;
  * while placeSymbol does receive one. What distinguishes one wheel
  * from another is not its symbols, but which of them it is showing.
  *
+ * Since Cycle 3 the machine also implements TestingTool: it offers to
+ * the marathon solver ONLY the two operations of the "testing tool"
+ * (spin(wheel, steps) and distinctSymbols()).
+ *
  * @author Jhazael and Santiago
- * @version 2.1 (Cycle 2 - 2026-2)
+ * @version 3.0 (Cycle 3 - 2026-2)
  */
-public class SlotMachine {
+public class SlotMachine implements TestingTool {
 
     // Symbol sequence of the machine. All wheels share it.
     private ArrayList<Symbol> symbols;
@@ -36,14 +40,13 @@ public class SlotMachine {
 
     // These constants are only used to compute where to draw each
     // wheel on screen (they have no relation to business logic).
+    // Space between wheels when there are few of them. With many wheels
+    // the space is reduced so that all of them fit on the canvas.
     private static final int SPACE_BETWEEN_WHEELS = 60;
+    private static final int CANVAS_USABLE_WIDTH = 840;
+    private static final int WHEEL_WIDTH = 40;
     private static final int INITIAL_X_POSITION = 40;
     private static final int INITIAL_Y_POSITION = 40;
-
-    // Colors the shapes Canvas knows how to paint. Any other CSS
-    // name makes the canvas draw black without warning.
-    private static final String[] VALID_COLORS = {"red", "black", "blue",
-        "yellow", "green", "magenta", "white"};
 
     // Body of the machine. It is drawn behind the wheels and changes
     // color when the machine reaches a winning configuration.
@@ -67,6 +70,47 @@ public class SlotMachine {
 
         successfulOperation = true;
         random = new Random();
+    }
+
+    /**
+     * Constructor for the marathon problem. Creates a machine with n
+     * wheels and n different symbols (the first n colors of the
+     * Palette), and leaves every wheel showing a random symbol. As in
+     * the marathon statement, the initial configuration is never a
+     * jackpot (when n is 2 or more). The machine is invisible.
+     *
+     * If n is smaller than 1 or bigger than the number of colors in
+     * the Palette, there are not n different symbols to build the
+     * machine: it stays empty and ok() returns false.
+     *
+     * @param n number of wheels and number of symbols.
+     */
+    public SlotMachine(int n) {
+        // start from an empty invisible machine
+        this();
+
+        if (n < 1 || n > Palette.size()) {
+            successfulOperation = false;
+            return;
+        }
+
+        // n symbols, one per color of the palette
+        for (int i = 1; i <= n; i++) {
+            addSymbol(i, Palette.colorAt(i - 1));
+        }
+        // n wheels, all of them born showing the first symbol
+        for (int i = 1; i <= n; i++) {
+            addWheel(i);
+        }
+
+        // spin every wheel to a random symbol; if all of them ended up
+        // equal (a jackpot) spin again, because the problem guarantees
+        // that the machine does not start already won
+        spinAllWheelsRandomly(n);
+        while (n > 1 && isJackpot()) {
+            spinAllWheelsRandomly(n);
+        }
+        successfulOperation = true;
     }
 
     /**
@@ -319,7 +363,8 @@ public class SlotMachine {
     }
 
     /**
-     * Rotates a single wheel of the machine a random number of steps.
+     * Rotates a single wheel of the machine a random number of steps
+     * (always at least one, so its symbol changes).
      * If the wheel is locked, the operation fails.
      *
      * @param wheel position of the wheel to rotate (starts at 1).
@@ -340,7 +385,7 @@ public class SlotMachine {
             return;
         }
 
-        wheels.get(index).rotate(random.nextInt(symbols.size()));
+        wheels.get(index).rotate(randomSteps());
 
         updateWinningState();
         successfulOperation = true;
@@ -364,7 +409,7 @@ public class SlotMachine {
             if (wheels.get(i).isLocked()) {
                 continue;
             }
-            wheels.get(i).rotate(random.nextInt(symbols.size()));
+            wheels.get(i).rotate(randomSteps());
         }
 
         updateWinningState();
@@ -463,6 +508,32 @@ public class SlotMachine {
     }
 
     /**
+     * Rotates every wheel a random number of steps (used by the
+     * constructor SlotMachine(n) to leave the machine random).
+     *
+     * @param wheelCount how many wheels the machine has.
+     */
+    private void spinAllWheelsRandomly(int wheelCount) {
+        for (int i = 0; i < wheelCount; i++) {
+            // any symbol is allowed here, including the first one
+            wheels.get(i).rotate(random.nextInt(symbols.size()));
+        }
+        updateWinningState();
+    }
+
+    /**
+     * @return a random number of steps for spin() and spin(wheel). It
+     * is never 0 (and never a whole turn), so a spun wheel always ends
+     * showing a different symbol when the machine has two or more.
+     */
+    private int randomSteps() {
+        if (symbols.size() <= 1) {
+            return 0;
+        }
+        return 1 + random.nextInt(symbols.size() - 1);
+    }
+
+    /**
      * Adjusts a position given by the user so that it falls within
      * the allowed range, and converts it to the list index.
      * The assignment requires that if the value is out of range, the
@@ -500,15 +571,11 @@ public class SlotMachine {
 
     /**
      * @param color color name to be checked.
-     * @return true if the canvas knows how to draw that color.
+     * @return true if the Palette knows that color, so the canvas can
+     * draw it.
      */
     private boolean isColorSupported(String color) {
-        for (int i = 0; i < VALID_COLORS.length; i++) {
-            if (VALID_COLORS[i].equals(color)) {
-                return true;
-            }
-        }
-        return false;
+        return Palette.isValid(color);
     }
 
     /**
@@ -542,11 +609,24 @@ public class SlotMachine {
      * wheels changes, so that no gaps are left.
      */
     private void repositionWheels() {
-        for (int i = 0; i < wheels.size(); i++) {
-            wheels.get(i).moveTo(INITIAL_X_POSITION + i * SPACE_BETWEEN_WHEELS,
-                                 INITIAL_Y_POSITION);
+        // the space between wheels shrinks when there are too many to
+        // fit on the canvas (for example 50 wheels)
+        int space = SPACE_BETWEEN_WHEELS;
+        if (wheels.size() > 0 && wheels.size() * space > CANVAS_USABLE_WIDTH) {
+            space = CANVAS_USABLE_WIDTH / wheels.size();
         }
-        body.changeSize(30 + 2 * MARGIN, wheels.size() * SPACE_BETWEEN_WHEELS + 10);
+        // each wheel is two thirds of the space, at most its normal width
+        int width = space * 2 / 3;
+        if (width > WHEEL_WIDTH) {
+            width = WHEEL_WIDTH;
+        }
+
+        for (int i = 0; i < wheels.size(); i++) {
+            wheels.get(i).moveTo(INITIAL_X_POSITION + i * space,
+                                 INITIAL_Y_POSITION);
+            wheels.get(i).resize(width);
+        }
+        body.changeSize(30 + 2 * MARGIN, wheels.size() * space + 10);
         bringWheelsToFront();
     }
 
